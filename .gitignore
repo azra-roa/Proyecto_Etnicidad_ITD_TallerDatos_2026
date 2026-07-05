@@ -47,3 +47,11 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+#Formatos a ignorar
+datos/crudos/
+datos/procesados/
+*.csv
+*.dta
+*.sav
+*.parquet
