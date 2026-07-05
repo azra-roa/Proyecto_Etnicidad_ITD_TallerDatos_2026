@@ -39,20 +39,20 @@ enaho_seleccion <- enaho_raw %>%
   
     #Variables para análisis
     sexo = p207,
-    etnicidad = p558c,
-    educacion = p301a.y,
-    edad = p208a,
-    pension_no = p558a5,
-    horas_sem = i513t,
-    temp_pago = p523,
-    ing_prin = p524a1,
-    tiene_ruc = p510a1,
-    tiene_contrato = p511a,
+    etnicidad = p558c, # "Por sus antepasados y de acuerdo a sus costumbres, ¿Ud. se considera:"
+    educacion = p301a.y, # "¿Cuál es el último año o grado de estudios y nivel que aprobó?"
+    edad = p208a,        # Edad en años cumplidos
+    pension_no = p558a5, # "¿El Sistema de pensiones al cual Ud. está afiliado es: No está afiliado" (Se usará esta pregunta como dummy de afiliación a sistema de pensiones)
+    horas_sem = i513t,  # "Total de horas trabajadas la semana pasada en su ocupación principal" (Importante: pregunta imputada)
+    temp_pago = p523,   # "En su ocupación principal, ¿A Ud. le pagan: (diario, semanal, etc)"
+    ing_prin = p524a1,  #Ingreso ocupación principal
+    tiene_ruc = p510a1,  # "El negocio o empresa donde trabaja, ¿Se encuentra registrado en la SUNAT, como:"
+    tiene_contrato = p511a, # Tipo de contrato ocupacion principal
     
     #Factores de expansión
-    factor200 = facpob07,
-    factor300 = factora07,
-    factor500 = fac500a,
+    factor200 = facpob07,    #Factor de expansión módulo 200
+    factor300 = factora07,   #Factor de expansión módulo 300
+    factor500 = fac500a,     #Factor de expansión módulo 500
   )
 
 # Inspección preliminar de la base
@@ -89,4 +89,5 @@ reporte_nas <- enaho_seleccion %>%
   pivot_longer(everything(), names_to = "variable", values_to = "porcentaje_na") %>%
   arrange(desc(porcentaje_na))
 
+#Exportamos la tabla de NAs a la carpeta de outputs
 write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO.csv")
