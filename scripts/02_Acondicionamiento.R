@@ -59,3 +59,34 @@ enaho_seleccion <- enaho_raw %>%
 dim(enaho_seleccion)        # Filas y columnas post join y selección
 names(enaho_seleccion)      # Verificación de nombres
 glimpse(enaho_seleccion)    # Revisión crítica de cómo R interpretó los tipos de datos
+
+# ------------------------------------------------------------------------------
+# 2. DIAGNÓSTICO DE NAs Y REPORTE-----------------------------------------------
+# ------------------------------------------------------------------------------
+
+# 2.1 Visualización Gráfica (libreria: naniar)
+
+# Barplot de cantidad de NAs por variable
+grafico_nas <- gg_miss_var(enaho_seleccion, show_pct = TRUE) +
+  labs(
+    title = "Porcentaje de Valores Perdidos (NAs) por Variable",
+    subtitle = "Proyecto: Análisis de la relacion etnicidad-ITD usando datos de la ENAHO (2025)",
+    y = "% de Valores Perdidos",
+    x = "Variables"
+  ) +
+  theme_minimal()
+
+# Mostramos el gráfico en el panel de RStudio
+print(grafico_nas)
+
+# Exportamos el gráfico a nuestra carpeta de outputs
+ggsave("outputs/Grafico_NAs_Etnicidad_ITC.png", plot = grafico_nas, 
+       width = 8, height = 6, bg = "white")
+
+# 2.2 Reporte Tabular 
+reporte_nas <- enaho_seleccion %>%
+  summarise(across(everything(), ~ round(sum(is.na(.)) / n() * 100, 2))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "porcentaje_na") %>%
+  arrange(desc(porcentaje_na))
+
+write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO.csv")
