@@ -33,3 +33,8 @@ keys_persona <- c(keys_hogar, "codperso", "p203", "p204", "p205",
 enaho_2025 <- mod500 %>% 
   left_join(mod300, by = keys_persona) %>% 
   left_join(mod200, by = keys_persona)
+
+#4. Exportación de la base creada
+library(arrow)
+renv::snapshot()
+write_parquet(enaho_2025, "datos/procesados/enaho_2025.parquet")
