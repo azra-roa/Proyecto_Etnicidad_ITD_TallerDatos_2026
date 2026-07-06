@@ -14,6 +14,7 @@ library(tidyverse)
 library(arrow)
 library(janitor)
 library(naniar)
+library(haven)
 renv::snapshot()
 
 # ------------------------------------------------------------------------------
@@ -48,6 +49,11 @@ enaho_seleccion <- enaho_raw %>%
     ing_prin = p524a1,  #Ingreso ocupación principal
     tiene_ruc = p510a1,  # "El negocio o empresa donde trabaja, ¿Se encuentra registrado en la SUNAT, como:"
     tiene_contrato = p511a, # Tipo de contrato ocupacion principal
+    
+    #Variables para filtro (PEA ocupada)
+    trabajo_semana_pasada = p501, #La persona tuvo trabajo la semana pasada
+    empleo_fijo_volvera  = p502,  #Respondió No a la pregunta de trabajo semana pasada pero tiene un empleo fijo al cual volverá
+    negocio_volvera  = p503,      #Respondió No a la pregunta de trabajo semana pasada pero tiene un negocio propio al cual volverá
     
     #Factores de expansión
     factor200 = facpob07,    #Factor de expansión módulo 200
@@ -91,3 +97,25 @@ reporte_nas <- enaho_seleccion %>%
 
 #Exportamos la tabla de NAs a la carpeta de outputs
 write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO.csv")
+
+# ------------------------------------------------------------------------------
+# 3. FILTRO DE BASE DE DATOS PARA INCLUIR SOLO A PEA OCUPADA Y NUEVO REPORTE NAS
+# ------------------------------------------------------------------------------
+
+# El INEI tiene filtros para las preguntas de trabajo, lo cual genera un caso de 
+# missing values MAR por factores estructurales de la encuesta. Considerando el 
+# objetivo de este trabajo de comparar accesos al trabajo decente, se ha 
+# decidido trabajar con la PEA ocupada, lo cual elimina parcialmente este problema
+
+enaho_seleccion <- zap_labels(enaho_seleccion) #Uso de zap_labels para quedarnos solo con codigos numericos de variables
+
+enaho_tratada_1 <- enaho_seleccion %>%
+  # Creación de la variable condición de ocupación
+  mutate(
+    condicion_ocupacion = ifelse(
+      trabajo_semana_pasada == 1 | empleo_fijo_volvera == 1 | negocio_volvera == 1, 
+      "PEA Ocupada", 
+      "No Ocupado (Desempleado/Inactivo)"
+    )
+  ) %>% #Filtro para quedarnos solo con aquellos que cumplan alguna de las condiciones
+  filter(trabajo_semana_pasada == 1 | empleo_fijo_volvera == 1 | negocio_volvera == 1)  
