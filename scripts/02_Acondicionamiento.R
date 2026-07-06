@@ -119,3 +119,34 @@ enaho_tratada_1 <- enaho_seleccion %>%
     )
   ) %>% #Filtro para quedarnos solo con aquellos que cumplan alguna de las condiciones
   filter(trabajo_semana_pasada == 1 | empleo_fijo_volvera == 1 | negocio_volvera == 1)  
+
+# 3.1 Visualización Gráfica (libreria: naniar)
+
+#Exclusión de variables de filtro
+enaho_tratada_2 <- enaho_tratada_1 %>% select(-c(negocio_volvera, empleo_fijo_volvera, trabajo_semana_pasada, condicion_ocupacion))
+
+# Barplot de cantidad de NAs por variable
+grafico_nas_tratada <- gg_miss_var(enaho_tratada_2, show_pct = TRUE) +
+  labs(
+    title = "Porcentaje de Valores Perdidos (NAs) por Variable",
+    subtitle = "Proyecto: Análisis de la relacion etnicidad-ITD usando datos de la ENAHO (2025)",
+    y = "% de Valores Perdidos",
+    x = "Variables"
+  ) +
+  theme_minimal()
+
+# Mostramos el gráfico en el panel de RStudio
+print(grafico_nas_tratada)
+
+# Exportamos el gráfico a nuestra carpeta de outputs
+ggsave("outputs/Grafico_NAs_Etnicidad_ITC_tratada.png", plot = grafico_nas_tratada, 
+       width = 8, height = 6, bg = "white")
+
+# 3.2 Reporte Tabular 
+reporte_nas <- enaho_tratada_2 %>%
+  summarise(across(everything(), ~ round(sum(is.na(.)) / n() * 100, 2))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "porcentaje_na") %>%
+  arrange(desc(porcentaje_na))
+
+#Exportamos la tabla de NAs a la carpeta de outputs
+write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO_tratada.csv")
