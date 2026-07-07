@@ -284,5 +284,15 @@ sum(is.na(enaho_tratada_7$tiene_ruc)) #Al hacer la revisión = 0 NAs en la varia
 #A partir de este punto se han eliminado 31284 casos de la base de datos entre 
 # las tres variables para las que se decidió eliminar NAs.
 
+# ------------------------------------------------------------------------------
+# 5. EXPORTANOS NUESTRA BASE DE DATOS-------------------------------------------
+# ------------------------------------------------------------------------------
 
+write_parquet(enaho_tratada_7, "datos/procesados/enaho_2025_06_07_26.parquet")
+#NOTA SOBRE ESTA BASE:
+# - SOLO INCLUYE MAYORES DE 14
+# - SOLO INCLUYE PEA OCUPADA
+# - SOLO INCLUYE PERSONAS QUE RESPONDIERON A LAS PREGUNTAS DE EDUCACIÓN, REGISTRO
+#   EN SUNAT Y TIPO DE CONTRATO
+# - IMPUTA INGRESOS Y TEMPORALIDAD DE PAGO POR MEDIANA (AGRUPADAS POR EDUCACIÓN)
 
