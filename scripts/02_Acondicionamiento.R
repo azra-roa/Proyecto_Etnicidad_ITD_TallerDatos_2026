@@ -150,3 +150,139 @@ reporte_nas <- enaho_tratada_2 %>%
 
 #Exportamos la tabla de NAs a la carpeta de outputs
 write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO_tratada.csv")
+
+# ------------------------------------------------------------------------------
+# 4. TRATAMIENTO DE NAs---------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# CASO A: MCAR (Missing Completely At Random) / Ausencia Estructural
+# Variable: educación
+# Problema: Hay una cantidad pequeña de celdas vacías (NAs= 0.04) que no podemos
+# explicar por otra variable.
+# Estrategia: Eliminación (listwise)
+# ------------------------------------------------------------------------------
+
+# PASO 4.1.1: Diagnóstico
+# Vemos cuántos NAs reales hay.
+diagnostico_educacion <- enaho_tratada_2 %>%
+  count(educacion, is.na(educacion)) %>%
+  arrange(desc(n))
+print(diagnostico_educacion) #22 de 56854 casos son NAs
+
+# PASO 4.1.2: Tratamiento (Eliminación Listwise)
+# Luego, como sospechamos que es un casos de MCAR/Estructural, aplicamos la 
+# estrategia de Eliminación usando drop_na().
+enaho_tratada_3 <- enaho_tratada_2 %>%
+  # Eliminación Listwise: Eliminamos de la base a los NAs de la variable
+  drop_na(educacion)
+
+sum(is.na(enaho_tratada_3$educacion)) #Al hacer la revisión = 0 NAs en la variable
+
+#A partir de este punto se han eliminado 22 casos de la base de datos.
+
+# ------------------------------------------------------------------------------
+# CASO B: MNAR (Missing Not At Random) / Ausencias ligadas al propio valor no observado
+# Variables Cuantitativas: ing_prin y temp_pago
+# Problema: Variables vinculadas al ingreso y a trabajo generan casos en las que las
+# personas tienen incentivos para no responder vinculados a la misma pregunta. 
+# Los NAs no se explican por otras variables.
+# Estrategia: Imputación Condicionada (Mediana según Nivel Educativo) 
+# Nota metodologíca: La estrategia utilizada esta introduciendo sesgo y subestimando la varianza
+# ------------------------------------------------------------------------------
+
+# PASO 4.2.1: Diagnóstico ingresos (Variable a tratar = ing_prin)
+# Vemos cuántos NAs reales hay.
+diagnostico_ingresos <- enaho_tratada_3 %>%
+  count(ing_prin, is.na(ing_prin)) %>%
+  arrange(desc(n))
+print(diagnostico_ingresos) #32170 de 56832 casos son NAs
+
+# PASO 4.2.2: Imputación condicionada por nivel educativo
+enaho_tratada_4 <- enaho_tratada_3 %>%
+  # Agrupamos a las personas por su nivel educativo para no imputar a ciegas.
+  group_by(educacion) %>%
+  mutate(
+    ing_prin = ifelse(
+      is.na(ing_prin), 
+      median(ing_prin, na.rm = TRUE), # Imputa la mediana de su propio grupo
+      ing_prin
+    )
+  ) %>%
+  ungroup() # Desagrupamos para evitar errores en cruces futuros
+
+sum(is.na(enaho_tratada_4$ing_prin)) #Al hacer la revisión = 0 NAs en la variable
+
+# PASO 4.3.1: Diagnóstico periodicidad de pago (Variable a tratar = temp_pago)
+# Vemos cuántos NAs reales hay.
+diagnostico_pago <- enaho_tratada_4 %>%
+  count(temp_pago, is.na(temp_pago)) %>%
+  arrange(desc(n))
+print(diagnostico_pago) #31798 de 56832 casos son NAs
+
+# PASO 4.3.2: Imputación condicionada por nivel educativo
+enaho_tratada_5 <- enaho_tratada_4 %>%
+  # Agrupamos a las personas por su nivel educativo para no imputar a ciegas.
+  group_by(educacion) %>%
+  mutate(
+    temp_pago = ifelse(
+      is.na(temp_pago), 
+      median(temp_pago, na.rm = TRUE), # Imputa la mediana de su propio grupo
+      temp_pago
+    )
+  ) %>%
+  ungroup() # Desagrupamos para evitar errores en cruces futuros
+
+sum(is.na(enaho_tratada_5$temp_pago)) #Al hacer la revisión = 0 NAs en la variable
+
+# ------------------------------------------------------------------------------
+# CASO C: MNAR (Missing Not At Random) / Ausencias ligadas al propio valor no observado
+# Variables Cualitativas: tiene_contrato y tiene_ruc
+# Problema: Como en el caso anterior, variables vinculadas a trabajo generan incentivos
+# para no responder vinculados a la misma pregunta. En este caso no podemos imputar por
+# la mediana al tratarse de variables categoricas, por lo tanto se asumirá la pérdida de
+# poder estadistico y el sesgo introducido y se elliminaran estos casos.
+# Estrategia: Eliminación (Listwise)
+# Nota metodologíca: La estrategia utilizada esta quitando poder estadístico al modelo
+# asi como introduciendo sesgo ya que los casos excluidos no son MCAR. 
+# ------------------------------------------------------------------------------
+
+# PASO 4.4.1: Diagnóstico tipo de contrato (Variable a tratar = tiene_contrato)
+# Vemos cuántos NAs reales hay.
+diagnostico_contrato <- enaho_tratada_5 %>%
+  count(tiene_contrato, is.na(tiene_contrato)) %>%
+  arrange(desc(n))
+print(diagnostico_contrato) #25241 de 56832 casos son NAs
+
+# PASO 4.4.2: Tratamiento (Eliminación Listwise)
+# Se ha decidido aplicar la estrategia de Eliminación usando drop_na().
+enaho_tratada_6 <- enaho_tratada_5 %>%
+  # Eliminación Listwise: Eliminamos de la base a los NAs de la variable
+  drop_na(tiene_contrato)
+
+sum(is.na(enaho_tratada_6$tiene_contrato)) #Al hacer la revisión = 0 NAs en la variable
+
+#A partir de este punto se han eliminado 25263 casos de la base de datos entre 
+# las dos variables para las que se decidió eliminar NAs.
+
+
+# PASO 4.4.1: Diagnóstico registro en SUNAT (Variable a tratar = tiene_ruc)
+# Vemos cuántos NAs reales hay.
+diagnostico_ruc <- enaho_tratada_6 %>%
+  count(tiene_ruc, is.na(tiene_ruc)) %>%
+  arrange(desc(n))
+print(diagnostico_ruc) #6021 de 31591 casos son NAs
+
+# PASO 4.4.2: Tratamiento (Eliminación Listwise)
+# Se ha decidido aplicar la estrategia de Eliminación usando drop_na().
+enaho_tratada_7 <- enaho_tratada_6 %>%
+  # Eliminación Listwise: Eliminamos de la base a los NAs de la variable
+  drop_na(tiene_ruc)
+
+sum(is.na(enaho_tratada_7$tiene_ruc)) #Al hacer la revisión = 0 NAs en la variable
+
+#A partir de este punto se han eliminado 31284 casos de la base de datos entre 
+# las tres variables para las que se decidió eliminar NAs.
+
+
+
