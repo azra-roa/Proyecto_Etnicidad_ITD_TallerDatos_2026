@@ -242,7 +242,7 @@ sum(is.na(enaho_tratada_5$temp_pago)) #Al hacer la revisión = 0 NAs en la varia
 
 # ------------------------------------------------------------------------------
 # CASO C: MNAR (Missing Not At Random) / Ausencias ligadas al propio valor no observado
-# Variables Cualitativas: tiene_contrato y tiene_ruc
+# Variables Cualitativas: etnicidad, tiene_contrato y tiene_ruc
 # Problema: Como en el caso anterior, variables vinculadas a trabajo generan incentivos
 # para no responder vinculados a la misma pregunta. En este caso no podemos imputar por
 # la mediana al tratarse de variables categoricas, por lo tanto se asumirá la pérdida de
