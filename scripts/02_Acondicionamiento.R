@@ -66,6 +66,11 @@ dim(enaho_seleccion)        # Filas y columnas post join y selección
 names(enaho_seleccion)      # Verificación de nombres
 glimpse(enaho_seleccion)    # Revisión crítica de cómo R interpretó los tipos de datos
 
+#Modificación de variable etnicidad para que incluya NAs correctos
+enaho_seleccion <- enaho_seleccion %>%
+  mutate(
+    etnicidad = ifelse(etnicidad == 8, NA, etnicidad))
+
 # ------------------------------------------------------------------------------
 # 2. DIAGNÓSTICO DE NAs Y REPORTE-----------------------------------------------
 # ------------------------------------------------------------------------------
