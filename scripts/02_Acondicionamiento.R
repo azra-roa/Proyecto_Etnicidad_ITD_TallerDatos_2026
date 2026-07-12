@@ -168,7 +168,7 @@ write_csv(reporte_nas, "outputs/Reporte_Datos_Perdidos_ENAHO_tratada.csv")
 # Estrategia: Eliminación (listwise)
 # ------------------------------------------------------------------------------
 
-# PASO 4.1.1: Diagnóstico
+# PASO 4.1.1: Diagnóstico educación
 # Vemos cuántos NAs reales hay.
 diagnostico_educacion <- enaho_tratada_2 %>%
   count(educacion, is.na(educacion)) %>%
@@ -271,14 +271,14 @@ sum(is.na(enaho_tratada_6$tiene_contrato)) #Al hacer la revisión = 0 NAs en la 
 # las dos variables para las que se decidió eliminar NAs.
 
 
-# PASO 4.4.1: Diagnóstico registro en SUNAT (Variable a tratar = tiene_ruc)
+# PASO 4.5.1: Diagnóstico registro en SUNAT (Variable a tratar = tiene_ruc)
 # Vemos cuántos NAs reales hay.
 diagnostico_ruc <- enaho_tratada_6 %>%
   count(tiene_ruc, is.na(tiene_ruc)) %>%
   arrange(desc(n))
 print(diagnostico_ruc) #6021 de 31591 casos son NAs
 
-# PASO 4.4.2: Tratamiento (Eliminación Listwise)
+# PASO 4.5.2: Tratamiento (Eliminación Listwise)
 # Se ha decidido aplicar la estrategia de Eliminación usando drop_na().
 enaho_tratada_7 <- enaho_tratada_6 %>%
   # Eliminación Listwise: Eliminamos de la base a los NAs de la variable
@@ -286,18 +286,38 @@ enaho_tratada_7 <- enaho_tratada_6 %>%
 
 sum(is.na(enaho_tratada_7$tiene_ruc)) #Al hacer la revisión = 0 NAs en la variable
 
+
 #A partir de este punto se han eliminado 31284 casos de la base de datos entre 
 # las tres variables para las que se decidió eliminar NAs.
+
+
+# PASO 4.6.1: Diagnóstico etnicidad (Variable a tratar = autoidentificación etnica por antepasados)
+# Vemos cuántos NAs reales hay.
+diagnostico_etnicidad <- enaho_tratada_7 %>%
+  count(etnicidad, is.na(etnicidad)) %>%
+  arrange(desc(n))
+print(diagnostico_etnicidad) #1174 de 25570 casos son NAs
+
+# PASO 4.6.2: Tratamiento (Eliminación Listwise)
+# Se ha decidido aplicar la estrategia de Eliminación usando drop_na().
+enaho_tratada_8 <- enaho_tratada_7 %>%
+  # Eliminación Listwise: Eliminamos de la base a los NAs de la variable
+  drop_na(etnicidad)
+
+sum(is.na(enaho_tratada_8$etnicidad)) #Al hacer la revisión = 0 NAs en la variable
+
+#A partir de este punto se han eliminado 32458 casos de la base de datos entre 
+# las cuatro variables para las que se decidió eliminar NAs.
 
 # ------------------------------------------------------------------------------
 # 5. EXPORTANOS NUESTRA BASE DE DATOS-------------------------------------------
 # ------------------------------------------------------------------------------
 
-write_parquet(enaho_tratada_7, "datos/procesados/enaho_2025_06_07_26.parquet")
+write_parquet(enaho_tratada_8, "datos/procesados/enaho_2025_12_07_26.parquet")
 #NOTA SOBRE ESTA BASE:
 # - SOLO INCLUYE MAYORES DE 14
 # - SOLO INCLUYE PEA OCUPADA
 # - SOLO INCLUYE PERSONAS QUE RESPONDIERON A LAS PREGUNTAS DE EDUCACIÓN, REGISTRO
-#   EN SUNAT Y TIPO DE CONTRATO
+#   EN SUNAT, ETNICIDAD Y TIPO DE CONTRATO
 # - IMPUTA INGRESOS Y TEMPORALIDAD DE PAGO POR MEDIANA (AGRUPADAS POR EDUCACIÓN)
 
