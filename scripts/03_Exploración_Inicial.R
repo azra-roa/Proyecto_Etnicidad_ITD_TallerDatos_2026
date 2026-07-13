@@ -158,3 +158,21 @@ formato_flextable <- function(tabla, titulo) {
     hline_bottom(part = "body", border = officer::fp_border(width = 1)) %>% 
     hline_bottom(part = "footer", border = officer::fp_border(width = 0))
 }
+
+# ------------------------------------------------------------------------------
+# 3.1 Sexo------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_sexo <- enaho_diseno_500 %>%
+  filter(!is.na(sexo_etiqueta)) %>%
+  group_by(sexo_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), 
+            Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje)) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), 
+         Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Sexo` = sexo_etiqueta, 
+         `Total (N)` = Poblacion, 
+         `%` = Porcentaje)
+
+ft_sexo <- formato_flextable(tabla_sexo, "Tabla 1. Distribución de la PEA ocupada según sexo, Perú, 2025")
+print(ft_sexo)
