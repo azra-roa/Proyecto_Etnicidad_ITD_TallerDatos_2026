@@ -61,7 +61,7 @@ enaho_clasificar2 <- enaho_clasificar1 %>%
     ),
     
     #ESTRATO, agrupado por teoria
-    estrato = case_when(
+    estrato_teo = case_when(
       estrato %in% 1:5 ~ "Urbano",
       estrato %in% 6:8 ~ "Rural"
     ),
@@ -196,4 +196,8 @@ write_parquet(
   arrow_table, 
   here::here("datos", "procesados", "enaho_analitica_2025_12_07_26.parquet")
 )
+
+
+
+
 
