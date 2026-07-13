@@ -141,3 +141,20 @@ enaho_explorar %>%
 # ==============================================================================
 # 3. EXPLORACIÓN UNIVARIADA: TABLAS DESCRIPTIVAS--------------------------------
 # ==============================================================================
+# Definimos una función para crear un formato Flextable estandarizado
+formato_flextable <- function(tabla, titulo) {
+  flextable(tabla) %>%
+    add_header_lines(values = titulo) %>%
+    add_footer_lines(values = "Fuente: ENAHO 2025. Cálculos expandidos a nivel poblacional.") %>%
+    autofit() %>% 
+    theme_vanilla() %>% 
+    border_inner_h(part = "body", border = officer::fp_border(width = 0)) %>% 
+    align(align = "center", part = "all") %>% 
+    align(j = 1, align = "left", part = "body") %>% 
+    bold(part = "header") %>%
+    align(align = "left", part = "footer") %>% 
+    fontsize(size = 9, part = "footer") %>% 
+    # Aseguramos que la línea final del cuerpo y del pie de página sean correctas
+    hline_bottom(part = "body", border = officer::fp_border(width = 1)) %>% 
+    hline_bottom(part = "footer", border = officer::fp_border(width = 0))
+}
