@@ -36,3 +36,31 @@ enaho_codebook <- enaho_final %>%
   ) %>%
   mutate(across(where(is.character), as.factor)) #Convertimos las variables de character a factor para que "Codebook" detecte nuestras etiquetas
 
+#Exportamos como la base de datos final de nuestro proyecto
+write_parquet(enaho_codebook, here("datos", "procesados", "enaho_final_2025_12_07_26.parquet"))
+
+# ==============================================================================
+# 2. ASIGNACIÓN DE METADATOS----------------------------------------------------
+# ==============================================================================
+# Creación de labels para dar al codebook la etiqueta descriptiva y la fuente original de cada variable
+# Se ha usado var_label() para darles un nombre humano y coherente
+
+# A. Variables Base Exploradas (Etiquetadas)
+var_label(enaho_codebook$sexo) <- "Sexo del encuestado/a (Fuente: P207)"
+var_label(enaho_codebook$etnicidad) <- "Autoidentificación Étnica por Antepasados (Fuente: P558C)"
+var_label(enaho_codebook$educacion) <- "Grado de Estudios (Fuente: P301A)"
+var_label(enaho_codebook$edad) <- "Edad del encuestado/a (Fuente: P207)"
+var_label(enaho_codebook$tiene_pension) <- "Condición de Afiliación a Sistema de Pensiones (Fuente: P558A5)"
+var_label(enaho_codebook$tiene_registro) <- "Registro en SUNAT del centro de trabajo (Fuente: P510A1)"
+var_label(enaho_codebook$tiene_contratos) <- "Condición de Contratación (Fuente: P511A)"
+var_label(enaho_codebook$horas_decente) <- "Horas Semanales Trabajadas (Fuente: I513T)"
+
+# B. Variables Analíticas (Clasificadas)
+var_label(enaho_codebook$edad_teoria) <- "Grupo de Edad (Cortes segúm metodología INEI) (Fuente: P208A)"
+var_label(enaho_codebook$edad_z) <- "Edad Estandarizada (Puntaje Z)"
+var_label(enaho_codebook$estrato_teo) <- "Clasificación Geográfica (Teórica)"
+var_label(enaho_codebook$ingreso_mensual_imp) <- "Ingreso Mensual (Imputado)"
+var_label(enaho_codebook$quintil_ingreso) <- "Quintil de Ingresos (Fuente: ingreso_mensual_imp)"
+var_label(enaho_codebook$ingreso_decente) <- "Ingreso Mensual (En relacion a RMV) (Fuente: ingreso_mensual_imp"
+var_label(enaho_codebook$indice_aditivo) <- "Índice de Trabajo Decente simple (del 1-4)"
+var_label(enaho_codebook$ITD) <- "Índice de Trabajo Decente (ITD)"
