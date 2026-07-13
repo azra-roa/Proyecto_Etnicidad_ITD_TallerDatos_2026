@@ -17,6 +17,7 @@ library(here)        # Para el facil acceso a los datos en el proyecto
 library(gtsummary)   # Para la creación de resumenes de la base de datos 
 library(flextable)   # Para la creación de tablas 
 library(Hmisc)       # Para la creación de edad Z
+renv::snapshot()
 
 # Carga de la base de datos acondicionada
 enaho_clasificar1 <- read_parquet(here("datos", "procesados", "enaho_2025_12_07_26.parquet"))
