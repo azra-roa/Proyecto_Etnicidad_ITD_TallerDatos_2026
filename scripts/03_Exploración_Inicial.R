@@ -413,3 +413,276 @@ plot_temp_pago <- ggplot(prop_temp_pago,
   theme_minimal()
 print(plot_temp_pago)
 
+# ==============================================================================
+# 5. EXPLORACIÓN BIVARIADA: RELACIONES ENTRE VARIABLES 
+# ==============================================================================
+# Se utiliza el factor de expansión del
+# módulo 500 (enaho_diseno_500) para todos los cruces bivariados, independientemente
+# del módulo de origen de cada variable.
+
+# ------------------------------------------------------------------------------
+# 5.1 Categórica vs. Categórica (Tablas de Contingencia)
+# ------------------------------------------------------------------------------
+
+# A. Sexo según registro en SUNAT  (Porcentajes por fila)
+tabla_sexo_ruc <- enaho_diseno_500 %>%
+  filter(!is.na(sexo_etiqueta) & !is.na(tiene_ruc_etiqueta)) %>%
+  group_by(sexo_etiqueta, tiene_ruc_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  group_by(sexo_etiqueta) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
+    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  select(sexo_etiqueta, tiene_ruc_etiqueta, Celda) %>%
+  pivot_wider(names_from = tiene_ruc_etiqueta, values_from = Celda) %>%
+  rename(`Sexo` = sexo_etiqueta)
+
+ft_sexo_ruc <- formato_flextable(tabla_sexo_ruc, "Tabla 10. Sexo según registro en SUNAT de la PEA ocupada, Perú, 2025")
+print(ft_sexo_ruc)
+
+# B. Sexo según Afiliación a Pensiones (Porcentajes por fila)
+tabla_sexo_pension <- enaho_diseno_500 %>%
+  filter(!is.na(sexo_etiqueta) & !is.na(pension_no_etiqueta)) %>%
+  group_by(sexo_etiqueta, pension_no_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  group_by(sexo_etiqueta) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
+    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  select(sexo_etiqueta, pension_no_etiqueta, Celda) %>%
+  pivot_wider(names_from = pension_no_etiqueta, values_from = Celda) %>%
+  rename(`Sexo` = sexo_etiqueta)
+
+ft_sexo_pension <- formato_flextable(tabla_sexo_pension, "Tabla 11. Sexo según afiliación a sistema de pensiones de la PEA ocupada, Perú, 2025")
+print(ft_sexo_pension)
+
+# C. Sexo según Tipo de Contrato (Porcentajes por fila)
+tabla_sexo_contrato <- enaho_diseno_500 %>%
+  filter(!is.na(sexo_etiqueta) & !is.na(tiene_contrato_etiqueta)) %>%
+  group_by(sexo_etiqueta, tiene_contrato_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  group_by(sexo_etiqueta) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
+    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  select(sexo_etiqueta, tiene_contrato_etiqueta, Celda) %>%
+  pivot_wider(names_from = tiene_contrato_etiqueta, values_from = Celda) %>%
+  rename(`Sexo` = sexo_etiqueta)
+
+ft_sexo_contrato <- formato_flextable(tabla_sexo_contrato, "Tabla 12. Tipo de contrato laboral según sexo de la PEA ocupada, Perú, 2025")
+print(ft_sexo_contrato)
+
+# D. Registro en SUNAT según Afiliación a Pensiones (Porcentajes por fila)
+tabla_ruc_pension <- enaho_diseno_500 %>%
+  filter(!is.na(tiene_ruc_etiqueta) & !is.na(pension_no_etiqueta)) %>%
+  group_by(pension_no_etiqueta, tiene_ruc_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  group_by(pension_no_etiqueta) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
+    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  select(pension_no_etiqueta, tiene_ruc_etiqueta, Celda) %>%
+  pivot_wider(names_from = tiene_ruc_etiqueta, values_from = Celda) %>%
+  rename(`Afiliación a Pensiones` = pension_no_etiqueta)
+
+ft_ruc_pension <- formato_flextable(tabla_ruc_pension, "Tabla 13. Registro en SUNAT según afiliación a sistema de pensiones, PEA ocupada, Perú, 2025")
+print(ft_ruc_pension)
+
+# E. Registro en SUNAT según Tipo de Contrato (Porcentajes por fila)
+tabla_ruc_contrato <- enaho_diseno_500 %>%
+  filter(!is.na(tiene_ruc_etiqueta) & !is.na(tiene_contrato_etiqueta)) %>%
+  group_by(tiene_ruc_etiqueta, tiene_contrato_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL)) %>%
+  group_by(tiene_ruc_etiqueta) %>%
+  mutate(
+    Porcentaje = (Poblacion / sum(Poblacion)) * 100,
+    Celda = paste0(scales::comma(round(Poblacion, 0)), " (", round(Porcentaje, 1), "%)")
+  ) %>%
+  select(tiene_ruc_etiqueta, tiene_contrato_etiqueta, Celda) %>%
+  pivot_wider(names_from = tiene_contrato_etiqueta, values_from = Celda) %>%
+  rename(`Registro en SUNAT` = tiene_ruc_etiqueta)
+
+ft_ruc_contrato <- formato_flextable(tabla_ruc_contrato, "Tabla 14. Tipo de contrato laboral según registro en SUNAT, PEA ocupada, Perú, 2025")
+print(ft_ruc_contrato)
+
+# ------------------------------------------------------------------------------
+# 5.2 Categórica vs. Continua (Tablas de Medianas + Boxplots)
+# ------------------------------------------------------------------------------
+if(!require(quantreg)) install.packages("quantreg")
+# A. Ingreso Principal según Sexo (descriptivos completos)
+tabla_ing_sexo <- enaho_diseno_500 %>%
+  filter(!is.na(sexo_etiqueta) & !is.na(ing_prin)) %>%
+  group_by(sexo_etiqueta) %>%
+  summarise(
+    N       = unweighted(n()),
+    Media   = survey_mean(ing_prin, vartype = NULL),
+    DE      = survey_sd(ing_prin, vartype = NULL),
+    Q1      = survey_quantile(ing_prin, 0.25, vartype = NULL)[[1]],
+    Mediana = survey_median(ing_prin, vartype = NULL),
+    Q3      = survey_quantile(ing_prin, 0.75, vartype = NULL)[[1]],
+    Minimo  = min(ing_prin, na.rm = TRUE),
+    Maximo  = max(ing_prin, na.rm = TRUE)
+  ) %>%
+  mutate(across(c(Media, DE, Q1, Mediana, Q3, Minimo, Maximo), 
+                ~ scales::comma(round(.x, 0)))) %>%
+  rename(`Sexo` = sexo_etiqueta)
+
+ft_ing_sexo <- formato_flextable(tabla_ing_sexo, "Tabla 15. Estadísticos descriptivos del ingreso principal según sexo, PEA ocupada, Perú, 2025")
+print(ft_ing_sexo)
+
+plot_ing_sexo <- ggplot(enaho_explorar %>% filter(!is.na(sexo_etiqueta) & !is.na(ing_prin)), 
+                        aes(x = sexo_etiqueta, y = ing_prin, fill = sexo_etiqueta, weight = factor500)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.alpha = 0.3) +
+  coord_cartesian(ylim = c(0, 5000)) + 
+  scale_y_continuous(labels = scales::comma) +
+  scale_fill_manual(values = c("Hombre" = "#2E5B88", "Mujer" = "#E69F00")) +
+  labs(title = "Gráfico 8. Ingreso principal según sexo, PEA ocupada", 
+       x = "Sexo", y = "Ingreso (Soles)",
+       caption = "Fuente: ENAHO 2025. Nota: Eje Y truncado en S/5,000.") +
+  theme_minimal() + theme(legend.position = "none")
+print(plot_ing_sexo)
+
+# B. Horas Semanales según Sexo
+tabla_horas_sexo <- enaho_diseno_500 %>%
+  filter(!is.na(sexo_etiqueta) & !is.na(horas_sem)) %>%
+  group_by(sexo_etiqueta) %>%
+  summarise(
+    N       = unweighted(n()),
+    Media   = survey_mean(horas_sem, vartype = NULL),
+    DE      = survey_sd(horas_sem, vartype = NULL),
+    Q1      = survey_quantile(horas_sem, 0.25, vartype = NULL)[[1]],
+    Mediana = survey_median(horas_sem, vartype = NULL),
+    Q3      = survey_quantile(horas_sem, 0.75, vartype = NULL)[[1]],
+    Minimo  = min(horas_sem, na.rm = TRUE),
+    Maximo  = max(horas_sem, na.rm = TRUE)
+  ) %>%
+  mutate(across(c(Media, DE, Q1, Mediana, Q3, Minimo, Maximo), 
+                ~ round(.x, 1))) %>%
+  rename(`Sexo` = sexo_etiqueta)
+
+ft_horas_sexo <- formato_flextable(tabla_horas_sexo, "Tabla 16. Estadísticos descriptivos de horas trabajadas según sexo, PEA ocupada, Perú, 2025")
+print(ft_horas_sexo)
+
+plot_horas_sexo <- ggplot(enaho_explorar %>% filter(!is.na(sexo_etiqueta) & !is.na(horas_sem)), 
+                          aes(x = sexo_etiqueta, y = horas_sem, fill = sexo_etiqueta, weight = factor500)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.alpha = 0.3) +
+  scale_fill_manual(values = c("Hombre" = "#2E5B88", "Mujer" = "#E69F00")) +
+  labs(title = "Gráfico 9. Horas trabajadas semanalmente según sexo, PEA ocupada", 
+       x = "Sexo", y = "Horas semanales",
+       caption = "Fuente: ENAHO 2025.") +
+  theme_minimal() + theme(legend.position = "none")
+print(plot_horas_sexo)
+
+# C. Ingreso Principal según Registro en SUNAT 
+tabla_ing_ruc <- enaho_diseno_500 %>%
+  filter(!is.na(tiene_ruc_etiqueta) & !is.na(ing_prin)) %>%
+  group_by(tiene_ruc_etiqueta) %>%
+  summarise(
+    N       = unweighted(n()),
+    Media   = survey_mean(ing_prin, vartype = NULL),
+    DE      = survey_sd(ing_prin, vartype = NULL),
+    Mediana = survey_median(ing_prin, vartype = NULL)
+  ) %>%
+  arrange(desc(Mediana)) %>%
+  mutate(across(c(Media, DE, Mediana), 
+                ~ scales::comma(round(.x, 0)))) %>%
+  rename(`Registro en SUNAT` = tiene_ruc_etiqueta)
+
+ft_ing_ruc <- formato_flextable(tabla_ing_ruc, "Tabla 17. Estadísticos descriptivos del ingreso principal según registro en SUNAT, PEA ocupada, Perú, 2025")
+print(ft_ing_ruc)
+
+plot_ing_ruc <- ggplot(enaho_explorar %>% filter(!is.na(tiene_ruc_etiqueta) & !is.na(ing_prin)), 
+                       aes(x = tiene_ruc_etiqueta, y = ing_prin, fill = tiene_ruc_etiqueta, weight = factor500)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.alpha = 0.3) +
+  coord_cartesian(ylim = c(0, 5000)) + 
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 10. Ingreso principal según registro en SUNAT, PEA ocupada", 
+       x = "Registro en SUNAT", y = "Ingreso (Soles)",
+       caption = "Fuente: ENAHO 2025. Nota: Eje Y truncado en S/5,000.") +
+  theme_minimal() + theme(legend.position = "none", axis.text.x = element_text(angle = 20, hjust = 1))
+print(plot_ing_ruc)
+
+# D. Ingreso Principal según Tipo de Contrato
+tabla_ing_contrato <- enaho_diseno_500 %>%
+  filter(!is.na(tiene_contrato_etiqueta) & !is.na(ing_prin)) %>%
+  group_by(tiene_contrato_etiqueta) %>%
+  summarise(
+    N       = unweighted(n()),
+    Media   = survey_mean(ing_prin, vartype = NULL),
+    DE      = survey_sd(ing_prin, vartype = NULL),
+    Mediana = survey_median(ing_prin, vartype = NULL)
+  ) %>%
+  arrange(desc(Mediana)) %>%
+  mutate(across(c(Media, DE, Mediana), 
+                ~ scales::comma(round(.x, 0)))) %>%
+  rename(`Tipo de Contrato` = tiene_contrato_etiqueta)
+
+ft_ing_contrato <- formato_flextable(tabla_ing_contrato, "Tabla 18. Estadísticos descriptivos del ingreso principal según tipo de contrato, PEA ocupada, Perú, 2025")
+print(ft_ing_contrato)
+
+plot_ing_contrato <- ggplot(enaho_explorar %>% filter(!is.na(tiene_contrato_etiqueta) & !is.na(ing_prin)), 
+                            aes(x = tiene_contrato_etiqueta, y = ing_prin, fill = tiene_contrato_etiqueta, weight = factor500)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.alpha = 0.3) +
+  coord_cartesian(ylim = c(0, 5000)) + 
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 11. Ingreso principal según tipo de contrato, PEA ocupada", 
+       x = "Tipo de Contrato", y = "Ingreso (Soles)",
+       caption = "Fuente: ENAHO 2025. Nota: Eje Y truncado en S/5,000.") +
+  theme_minimal() + theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))
+print(plot_ing_contrato)
+
+# E. Ingreso Principal según Nivel Educativo 
+tabla_ing_educacion <- enaho_diseno_300 %>%
+  filter(!is.na(educacion_etiqueta) & !is.na(ing_prin)) %>%
+  mutate(
+    educacion_agrupada = case_when(
+      educacion_etiqueta %in% c("Sin nivel", "Educación inicial", "Básica especial") ~ "Sin nivel / Inicial / Básica especial",
+      educacion_etiqueta %in% c("Primaria incompleta", "Primaria completa") ~ "Primaria",
+      educacion_etiqueta %in% c("Secundaria incompleta", "Secundaria completa") ~ "Secundaria",
+      educacion_etiqueta %in% c("Sup. no univ. incompleta", "Sup. no univ. completa") ~ "Superior no universitaria",
+      educacion_etiqueta %in% c("Sup. univ. incompleta", "Sup. univ. completa") ~ "Superior universitaria",
+      educacion_etiqueta == "Maestría/Doctorado" ~ "Posgrado",
+      TRUE ~ NA_character_
+    ),
+    educacion_agrupada = factor(educacion_agrupada, levels = c(
+      "Sin nivel / Inicial / Básica especial", "Primaria", "Secundaria",
+      "Superior no universitaria", "Superior universitaria", "Posgrado"
+    ))
+  ) %>%
+  filter(!is.na(educacion_agrupada)) %>%
+  group_by(educacion_agrupada) %>%
+  summarise(
+    N       = unweighted(n()),
+    Media   = survey_mean(ing_prin, vartype = NULL),
+    DE      = survey_sd(ing_prin, vartype = NULL),
+    Mediana = survey_median(ing_prin, vartype = NULL)
+  ) %>%
+  mutate(across(c(Media, DE, Mediana), 
+                ~ scales::comma(round(.x, 0)))) %>%
+  rename(`Nivel Educativo` = educacion_agrupada)
+
+ft_ing_educacion <- formato_flextable(tabla_ing_educacion, "Tabla 19. Estadísticos descriptivos del ingreso principal según nivel educativo (agrupado), PEA ocupada, Perú, 2025")
+print(ft_ing_educacion)
+
+# F. Ingreso Principal según Etnicidad (solo tabla, 9 categorías)
+tabla_ing_etnicidad <- enaho_diseno_500 %>%
+  filter(!is.na(etnicidad_etiqueta) & !is.na(ing_prin)) %>%
+  group_by(etnicidad_etiqueta) %>%
+  summarise(
+    N       = unweighted(n()),
+    Media   = survey_mean(ing_prin, vartype = NULL),
+    DE      = survey_sd(ing_prin, vartype = NULL),
+    Mediana = survey_median(ing_prin, vartype = NULL)
+  ) %>%
+  arrange(desc(Mediana)) %>%
+  mutate(across(c(Media, DE, Mediana), 
+                ~ scales::comma(round(.x, 0)))) %>%
+  rename(`Etnicidad` = etnicidad_etiqueta)
+
+ft_ing_etnicidad <- formato_flextable(tabla_ing_etnicidad, "Tabla 20. Estadísticos descriptivos del ingreso principal según autoidentificación étnica, PEA ocupada, Perú, 2025")
+print(ft_ing_etnicidad)
+
