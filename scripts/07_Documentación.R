@@ -20,3 +20,19 @@ renv::snapshot()
 # Cargamos nuestra base de datos analítica final (fruto de EXTRAER a CLASIFICAR)
 enaho_final <- read_parquet(here("datos", "procesados", "enaho_analitica_2025_12_07_26.parquet"))
 
+# ==============================================================================
+# 1. SELECCIÓN DE VARIABLES PARA EL CODEBOOK------------------------------------
+# ==============================================================================
+
+#Creamos una base de datos solo con las variables de la exploración analitica y creadas
+
+enaho_codebook <- enaho_final %>%
+  select(
+    sexo, etnicidad, educacion, edad, 
+    tiene_pension, tiene_registro, tiene_contratos, 
+    horas_decente, edad_teoria, edad_z, 
+    estrato_teo, ingreso_mensual_imp, 
+    quintil_ingreso, ingreso_decente, indice_aditivo, ITD
+  ) %>%
+  mutate(across(where(is.character), as.factor)) #Convertimos las variables de character a factor para que "Codebook" detecte nuestras etiquetas
+
