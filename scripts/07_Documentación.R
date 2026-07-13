@@ -99,3 +99,15 @@ metadata(enaho_codebook)$creator <- "Carmen Andonayre y Azra Roa"
 
 #Exportación de base de datos en formato parquet
 write_parquet(enaho_codebook, here("datos", "procesados", "enaho_final_2025_12_07_26.parquet"))
+
+# ==============================================================================
+# 4. GENERACIÓN AUTOMATIZADA DE DOCUMENTACIÓN-----------------------------------
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Paquete utilizado:'codebook' (Reporte más detallado)
+# ------------------------------------------------------------------------------
+# Genera un CodeBook completo, incluyendo frecuencias, tipos, etiquetas 
+# y estadísticos básicos de manera interactiva.
+
+codebook(enaho_codebook)
