@@ -53,4 +53,3 @@ datos/crudos/
 datos/procesados/
 *.dta
 *.sav
-*.parquet
