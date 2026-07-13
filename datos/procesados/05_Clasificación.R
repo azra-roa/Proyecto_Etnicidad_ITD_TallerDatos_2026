@@ -183,3 +183,17 @@ enaho_clasificar4 <- enaho_clasificar3 %>% select(-c(ingreso_cumple, mod_contrat
 enaho_reporte <- enaho_clasificar4 %>%
   filter(!is.na(factor500)) %>%
   as_survey_design(ids = conglome, strata = estrato, weights = factor500, nest = TRUE)
+
+# ==============================================================================
+# 2. EXPORTAR BASE DE DATOS ANALÍTICA
+# ==============================================================================
+
+# Guardamos la base con las nuevas variables creadas
+
+df_clean <- as.data.frame(enaho_reporte) 
+arrow_table <- as_arrow_table(df_clean)
+write_parquet(
+  arrow_table, 
+  here::here("datos", "procesados", "enaho_analitica_2025_12_07_26.parquet")
+)
+
