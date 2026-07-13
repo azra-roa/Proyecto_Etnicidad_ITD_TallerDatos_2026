@@ -96,3 +96,6 @@ for (var in names(dict_metadata)) {
 metadata(enaho_codebook)$name <- "Base de Datos Analítica - Proyecto Etnicidad-ITD ENAHO 2025"
 metadata(enaho_codebook)$description <- "Submuestra de la Encuesta Nacional de Hogares (2025) restringida a PEA Ocupada, mayores de 14 años, con autoidentificación étnica definida"
 metadata(enaho_codebook)$creator <- "Carmen Andonayre y Azra Roa"
+
+#Exportación de base de datos en formato parquet
+write_parquet(enaho_codebook, here("datos", "procesados", "enaho_final_2025_12_07_26.parquet"))
