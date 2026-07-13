@@ -715,3 +715,58 @@ plot_horas_ingreso <- ggplot(enaho_explorar %>% filter(!is.na(horas_sem) & ing_p
        caption = "Fuente: ENAHO 2025. Nota: Se excluyeron ingresos iguales a cero.") +
   theme_minimal()
 print(plot_horas_ingreso)
+
+# =====================================================================================
+# 6. EXPORTACIÓN MASIVA (Imágenes para Informe descriptivo que haremos en Markdown)----
+# =====================================================================================
+
+# --- Ruta de salida única ---
+ruta_salida <- "outputs/outputs_exploracion_inicial"
+
+if (!dir.exists(ruta_salida)) dir.create(ruta_salida, recursive = TRUE)
+
+# ==============================================================================
+# EXPORTACIÓN: TABLAS Y GRÁFICOS UNIVARIADOS
+# ==============================================================================
+save_as_image(ft_sexo,           path = paste0(ruta_salida, "/Tabla1_Sexo.png"))
+save_as_image(ft_etnicidad,      path = paste0(ruta_salida, "/Tabla2_Etnicidad.png"))
+save_as_image(ft_educacion,      path = paste0(ruta_salida, "/Tabla3_Educacion.png"))
+save_as_image(ft_pension_no,     path = paste0(ruta_salida, "/Tabla4_Pension.png"))
+save_as_image(ft_temp_pago,      path = paste0(ruta_salida, "/Tabla5_FrecuenciaPago.png"))
+save_as_image(ft_tiene_ruc,      path = paste0(ruta_salida, "/Tabla6_RegistroSUNAT.png"))
+save_as_image(ft_tiene_contrato, path = paste0(ruta_salida, "/Tabla7_TipoContrato.png"))
+save_as_image(ft_edad,           path = paste0(ruta_salida, "/Tabla8_Stats_Edad.png"))
+save_as_image(ft_ing_prin,       path = paste0(ruta_salida, "/Tabla9_Stats_Ingreso.png"))
+save_as_image(ft_horas_sem,      path = paste0(ruta_salida, "/Tabla10_Stats_HorasSemana.png"))
+
+ggsave(paste0(ruta_salida, "/Grafico1_Edad.png"),           plot = plot_edad,      width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico2_Ingreso.png"),        plot = plot_ingreso,   width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico3_HorasSemana.png"),    plot = plot_horas,     width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico4_FrecuenciaPago.png"), plot = plot_temp_pago, width = 8, height = 5, bg = "white")
+
+# ==============================================================================
+# EXPORTACIÓN: TABLAS Y GRÁFICOS BIVARIADOS (numeración según .Rmd)
+# ==============================================================================
+# --- 5.1 Categórica vs. Categórica ---
+save_as_image(ft_sexo_ruc,       path = paste0(ruta_salida, "/Tabla10_RUC_Sexo.png"))
+save_as_image(ft_sexo_pension,   path = paste0(ruta_salida, "/Tabla11_Pension_Sexo.png"))
+save_as_image(ft_sexo_contrato,  path = paste0(ruta_salida, "/Tabla12_Contrato_Sexo.png"))
+save_as_image(ft_ruc_pension,    path = paste0(ruta_salida, "/Tabla13_RUC_Pension.png"))
+save_as_image(ft_ruc_contrato,   path = paste0(ruta_salida, "/Tabla14_Contrato_RUC.png"))
+
+# --- 5.2 Categórica vs. Continua ---
+save_as_image(ft_ing_sexo,       path = paste0(ruta_salida, "/Tabla15_Ingreso_Sexo.png"))
+save_as_image(ft_horas_sexo,     path = paste0(ruta_salida, "/Tabla16_Horas_Sexo.png"))
+save_as_image(ft_ing_ruc,        path = paste0(ruta_salida, "/Tabla17_Ingreso_RUC.png"))
+save_as_image(ft_ing_contrato,   path = paste0(ruta_salida, "/Tabla18_Ingreso_Contrato.png"))
+save_as_image(ft_ing_educacion,  path = paste0(ruta_salida, "/Tabla19_Ingreso_Educacion.png"))
+save_as_image(ft_ing_etnicidad,  path = paste0(ruta_salida, "/Tabla20_Ingreso_Etnicidad.png"))
+
+ggsave(paste0(ruta_salida, "/Grafico8_Ingreso_Sexo.png"),      plot = plot_ing_sexo,      width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico9_Horas_Sexo.png"),        plot = plot_horas_sexo,    width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico10_Ingreso_RUC.png"),      plot = plot_ing_ruc,       width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico11_Ingreso_Contrato.png"), plot = plot_ing_contrato,  width = 8, height = 5, bg = "white")
+
+# --- 5.3 Continua vs. Continua ---
+ggsave(paste0(ruta_salida, "/Grafico12_Edad_Ingreso.png"),  plot = plot_edad_ingreso,  width = 8, height = 5, bg = "white")
+ggsave(paste0(ruta_salida, "/Grafico13_Horas_Ingreso.png"), plot = plot_horas_ingreso, width = 8, height = 5, bg = "white")
