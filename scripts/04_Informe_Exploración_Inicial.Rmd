@@ -16,3 +16,219 @@ knitr::opts_chunk$set(
 )
 ```
 
+# **Introducción**
+
+En el presente documento se realiza un análisis exploratorio de datos (EDA) de las variables seleccionadas para el proyecto "Relación entre  la autoidentificación étnico/racial y el acceso a un trabajo decente". En concreto, el presente informe detalla desde la propuesta de trabajo decente de Gamero (2012), cómo se relaciona este concepto según variables sociodemográficas y laborales. De manera más específica, se utilizan las siguientes variables:
+
+- **Sociodemográficas:** sexo, edad, nivel educativo, autoidentificación étnico/racial
+- **Laborales:** registro en SUNAT (RUC), tipo de contrato, frecuencia de pago, horas trabajadas semanalmente, ingreso principal y  afiliación a sistema de pensiones
+
+---
+
+## I. Análisis Univariado
+
+### 1. Perfil Sociodemográfico
+
+```{r, fig.cap="Tabla 1: Distribución de la PEA ocupada según sexo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla1_Sexo.png"))
+```
+
+La **Tabla 1** muestra que la composición por sexo de la PEA ocupada presenta una distribución relativamente equilibrada, aunque con una leve sobrerrepresentación masculina: 57.9% son hombres frente a un 42.1% de mujeres. Esta brecha de más de 15 puntos porcentuales es consistente con patrones del mercado laboral peruano, donde persiste una menor participación laboral femenina asociada a la carga desigual del trabajo de cuidado no remunerado y a roles de género que obstaculizan el ingreso al campo laboral remunerado.
+
+```{r, fig.cap="Tabla 8: Estadísticos de resumen - Edad"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla8_Stats_Edad.png"))
+```
+La **Tabla 8** muestra que la PEA ocupada en Perú tiene una mediana de edad de 36 años (media = 37.6, DE = 15.5), lo que evidencia una fuerza laboral relativamente joven. El hecho de que la media sea ligeramente superior a la mediana (36) sugiere una leve asimetría hacia la derecha en la distribución, es decir, la presencia de un grupo de trabajadores de mayor edad, lo cual se evidencia en la edad máxima registrada, 97 años. Esto "arrastra" el promedio hacia arriba sin representar el patrón típico de la mayoría. El rango intercuartílico (Q1 = 25, Q3 = 48) indica que el 50% central de la PEA ocupada se concentra entre los 25 y 48 años, un rango etario que coincide con la etapa de mayor actividad económica y "productividad" del ciclo de vida.
+
+
+```{r, fig.cap="Gráfico 1: Distribución de edad de la PEA ocupada"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico1_Edad.png"))
+```
+El **Gráfico 1** confirma la lectura de los estadísticos descriptivos presentados en la tabla anterior y revela además una asimetría positiva (cola hacia la derecha): la distribución alcanza su punto más alto alrededor de los 25 años y desciende progresivamente a partir de esa edad, con una cola larga pero cada vez más delgada que se extiende hasta cerca de los 90 años. Esto sugiere una alta concentración de trabajadores jóvenes-adultos ingresando al mercado laboral, mientras que la participación decrece de manera sostenida en las edades más avanzadas. Esto se puede asociar al retiro progresivo, problemas de salud, reducción de capacidades funcionales o barreras de reinserción laboral para adultos mayores, aunque un grupo reducido de personas de la tercera edad permanece activo, lo cual puede deberse a condiciones socioeconómicas no favorables.
+
+```{r, fig.cap="Tabla 3: Distribución según nivel educativo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla3_Educacion.png"))
+```
+La **Tabla 3** muestra que el nivel educativo predominante entre la PEA ocupada es la "secundaria completa" (34.3%), seguido a distancia por "secundaria incompleta" (13.3%) y superior universitaria completa (11.9%). Al agrupar las categorías, se observa que la mayoría de la fuerza laboral (61.9%) no ha superado el nivel secundario, mientras que solo cerca de un tercio (38.2%) ha alcanzado algún nivel de educación superior completa o incompleta, "Maestría/Doctorado" sea "universitaria" o "no universitaria". Este patrón evidencia una brecha significativa en el acceso a formación educativa, lo cual probablemente se traduce en menores posibilidades de acceso a empleos formales y mejor remunerados. Esta es una hipótesis que se podrá contrastar más adelante al cruzar esta variable con el ingreso principal (Tabla 9) o el tipo de contrato (Tabla 6).
+
+```{r, fig.cap="Tabla 2: Distribución según autoidentificación étnica"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla2_Etnicidad.png"))
+```
+
+La **Tabla 2** muestra que la mayoría de la PEA ocupada se autoidentifica como "Mestizo" (58.6%), seguida por "Quechua" (20.9%), mientras que las categorías "Negro/Moreno/Zambo/Multato/Afroperuano" (7.4%), "Blanco" (5.5%) y "Aimara" (2%) representan proporciones considerablemente menores. En conjunto, al agrupar a la población autoidentificada como "Quechua", "Nativo/indígena amazónico" y "Pueblo indígena u originario", estos conforman el 21.9% de la PEA y evidencia que la diversidad étnica del país tiene una expresión significativa en el mercado laboral. Esto resulta relevante para analizar más adelante si existen brechas de acceso a la formalidad o al ingreso asociadas a la autoidentificación étnica.
+
+---
+
+### 2. Inserción Laboral y Formalidad Empresarial
+
+```{r, fig.cap="Tabla 6: Tipo de registro del centro de trabajo (SUNAT)"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla6_RegistroSUNAT.png"))
+```
+La **Tabla 6** muestra que el registro en SUNAT del centro de trabajo no refleja el patrón típico de la PEA ocupada pues un 44.3% de la muestra trabaja en negocios que no están registrados (sin RUC). Le sigue "Persona Jurídica" con 39.3%, mientras que "Persona Natural (con RUC/RUS/RER u otro)" representa el 16.3% restante. Al agrupar ambas categorías de formalidad (Persona Jurídica + Persona Natural con RUC), se observa que el 55.6% de la PEA ocupada trabaja en negocios formalmente registrados, frente a un 44.3% en la informalidad empresarial. Esta cifra confirma que, si bien la formalidad es ligeramente mayoritaria, la informalidad empresarial sigue afectando a un segmento considerable de la fuerza laboral, lo que tiene implicancias directas sobre el acceso a beneficios laborales asociados a la formalidad del centro de trabajo.
+
+```{r, fig.cap="Tabla 7: Tipo de contrato laboral"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla7_TipoContrato.png"))
+```
+
+La **Tabla 7** muestra que la precariedad contractual es la condición predominante entre la PEA ocupada: un 61.6% no cuenta con ningún tipo de contrato. Esta es una cifra que por sí sola supera ampliamente a todas las demás categorías combinadas. Le sigue "Plazo fijo (sujeto a modalidad)" con 25.9%, mientras que apenas un 8.6% goza de un contrato indefinido/nombrado/permanente, es decir la forma de contratación más estable. Las categorías restantes (locación de servicios, convenio de formación laboral juvenil, período de prueba) representan proporciones marginales, en conjunto menores al 3.9%. Este panorama confirma que la estabilidad laboral es más bien excepcional que el patrón típico: menos de 1 de cada 10 trabajadores tiene acceso a un contrato permanente. Esto limita, significativamente la proyección económica y la sostenibilidad de la participación en el mercado laboral en el largo plazo de las familias y su capacidad de acceso a beneficios asociados a la formalidad contractual como la CTS, las vacaciones, un seguro, entre otros.
+
+```{r, fig.cap="Tabla 5: Frecuencia de pago"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla5_FrecuenciaPago.png"))
+```
+La **Tabla 5** muestra que la modalidad de pago mensual es la predominante entre la PEA ocupada (54.4%), seguida por el pago semanal (37.7%). Juntas, estas dos modalidades concentran más del 92.1% de los trabajadores, mientras que las formas de pago quincenal (6.8%) y diario (1.2%) son marginales. La combinación entre la alta prevalencia del pago semanal y los elevados niveles de informalidad observados anteriormente (Tablas 5 y 6) sugiere una posible asociación entre modalidades de pago más frecuentes (semanal, diario) y relaciones laborales menos formalizadas, una hipótesis que podría explorarse con mayor profundidad en el análisis bivariado.
+
+---
+
+### 4. Condiciones Laborales
+
+```{r, fig.cap="Tabla 9: Estadísticos de resumen - Ingreso Principal"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla9_Stats_Ingreso.png"))
+```
+La **Tabla 9** muestra que el ingreso principal de la PEA ocupada presenta una mediana de S/ 700 (media = S/ 1,103, DE = S/ 1,285), evidenciando una desigualdad considerable en la distribución de ingresos. La brecha entre la media y la mediana —más de S/ 400 de diferencia— revela una marcada asimetría hacia la derecha: mientras que la mitad de los trabajadores percibe S/ 700 o menos, un grupo minoritario de altos ingresos (hasta S/ 28,080 en el caso máximo registrado) eleva significativamente el promedio, sin representar la experiencia típica de la mayoría. El rango intercuartílico (Q1 = S/ 345, Q3 = S/ 1,500) confirma esta concentración en la parte baja de la escala: el 50% central de la PEA ocupada percibe entre S/ 345 y S/ 1,500 mensuales, montos que en su mayoría se ubican por debajo o apenas por encima de la Remuneración Mínima Vital, reflejando las condiciones de precariedad salarial que ya se anticipaban al observar los altos niveles de informalidad contractual y empresarial (Tablas 5 y 6).
+
+```{r, fig.cap="Gráfico 2: Distribución del ingreso principal"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico2_Ingreso.png"))
+```
+
+La **Tabla 9** mostró que el ingreso principal de la PEA ocupada presenta una mediana de S/ 700 (media = S/ 1,103, DE = S/ 1,285), evidenciando una desigualdad considerable en la distribución de ingresos. El **Gráfico 2** confirma esta lectura: la distribución se concentra fuertemente en el tramo de S/ 0 a S/ 1,000, con un pico marcado alrededor de los S/ 500-1,000, y decae de forma pronunciada a partir de ahí, formando una cola larga y delgada que se extiende mucho más allá de los S/ 10,000 (el eje truncado en el gráfico apenas alcanza a mostrar la magnitud real de esa dispersión, dado que el máximo registrado es S/ 28,080). Esta marcada asimetría hacia la derecha —reflejada también en la diferencia entre media y mediana— confirma que un grupo minoritario de altos ingresos "eleva"arrastra" el promedio sin representar la experiencia típica de la mayoría. Resulta particularmente relevante que la mediana (S/ 700) se ubique muy por debajo de la Remuneración Mínima Vital vigente en 2025 (S/ 1,130), lo cual sugiere que el 50% de la PEA ocupada no recibe más de dicho moto. Esto puede estar asociado a la alta prevalencia de trabajo sin contrato y en la informalidad empresarial ya documentada (Tablas 5 y 6), así como a la elevada proporción de jornadas parciales que podrían no alcanzar el equivalente proporcional de la RMV.
+
+```{r, fig.cap="Tabla 10: Estadísticos de resumen - Horas Trabajadas Semanalmente"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla10_Stats_HorasSemana.png"))
+```
+La **Tabla 10** muestra que la PEA ocupada trabaja una mediana de 45 horas semanales en su ocupación principal (media = 40.8, DE = 18), un valor que se aproxima a la jornada máxima legal de 48 horas. A diferencia de lo observado en edad e ingreso, aquí la media es menor que la mediana, lo que indica una asimetría hacia la izquierda: existe un grupo de trabajadores con jornadas considerablemente reducidas (el mínimo registrado es 0 horas) que reduce el promedio general por debajo del valor típico de la mayoría. El rango intercuartílico (Q1 = 29, Q3 = 48) muestra que el 50% central de la PEA ocupada trabaja entre 29 y 48 horas semanales, un rango amplio que sugiere heterogeneidad en los regímenes de jornada laboral: desde trabajos a tiempo parcial hasta jornadas que alcanzan el límite legal de 48 horas semanales. Es particularmente relevante que tanto la mediana (45) como el percentil 75 (48) se ubiquen muy cerca o exactamente en el límite legal, lo que indica que una proporción considerable de trabajadores se encuentra en el tope de la jornada permitida o probablemente por encima de ella (máximo registrado: 98 horas), evidenciando situaciones de sobrecarga laboral que suelen asociarse a la ausencia de regulación efectiva en contextos de informalidad (Tablas 5 y 6).
+
+```{r, fig.cap="Gráfico 3: Distribución de horas trabajadas a la semana"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico3_HorasSemana.png"))
+```
+
+La **Tabla 10** muestra que la PEA ocupada trabaja una mediana de 45 horas semanales en su ocupación principal (media = 40.8, DE = 18), un valor que se aproxima a la jornada máxima legal de 48 horas. El **Gráfico 3** confirma esta lectura y revela, además, un patrón particularmente notorio: existe un pico muy pronunciado y aislado alrededor de las 48 horas semanales, lo que sugiere que una proporción considerable de trabajadores declara exactamente la jornada máxima legal, posiblemente como referencia estándar de "jornada completa" más que como un reflejo preciso de horas efectivamente trabajadas. Fuera de ese pico, la distribución se muestra relativamente dispersa entre 0 y 90 horas, con una cola visible que se extiende más allá de las 75 horas, evidenciando la coexistencia de jornadas parciales muy reducidas junto con casos de sobrecarga laboral considerable. Esta heterogeneidad, sumada a la elevada concentración justo en el límite legal, es consistente con un mercado laboral donde la regulación de la jornada de trabajo convive con altos niveles de informalidad, lo que en la práctica dificulta su fiscalización efectiva (Tablas 5 y 6).
+
+```{r, fig.cap="Tabla 4: Afiliación a sistema de pensiones"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla4_Pension.png"))
+```
+Como se observa en la **Tabla 4** la desprotección previsional es la condición predominante entre la PEA ocupada: un 58.1% no está afiliado a ningún sistema de pensiones, frente a un 41.9% que sí cuenta con algún tipo de afiliación. Esto significa que más de la mitad de la fuerza laboral actual llegará a la vejez sin un ingreso de reemplazo garantizado, lo cual posibilita un futuro incremento significativo de la pobreza en la tercera edad en las próximas décadas si no se adoptan medidas de expansión de la cobertura previsional —especialmente considerando los altos niveles de informalidad laboral y empresarial ya documentados (Tablas 5 y 6), que dificultan estructuralmente el acceso a mecanismos de aseguramiento contributivo.
+---
+
+## II. Análisis Bivariado: Relaciones Estructurales y Brechas
+
+### Segregación y Brechas de Género en la Formalidad
+
+```{r, fig.cap="Tabla 11: Sexo según registro en SUNAT"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla11_RUC_Sexo.png"))
+```
+La **Tabla 11** muestra que el 46.4% de las mujeres trabaja en centros sin registro en SUNAT, frente al 42.8% de los hombres, lo que señala una brecha de 3.6 puntos porcentuales. La asimetría se refuerza al observar el otro extremo de la distribución: solo el 36.7% de las mujeres se inserta en centros constituidos como persona jurídica, en comparación con el 41.3% de los hombres. Las mujeres, en cambio, tienen una participación ligeramente mayor en la categoría intermedia de persona natural con RUC/RUS/RER (17% vs. 15.9%), lo cual sugiere una mayor presencia femenina en espacios formalizados a título personal, antes que en estructuras empresariales de mayor tamaño. En conjunto, la tabla evidencia que la exclusión de la formalidad más consolidada (persona jurídica) y la mayor exposición a la informalidad total son dos caras de una misma segregación estructural de género en el mercado laboral.
+
+```{r, fig.cap="Tabla 12: Afiliación a pensiones según sexo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla12_Pension_Sexo.png"))
+```
+La **Tabla 12** profundiza la brecha observada en la Tabla 10, pues se identifica que el 64.7% de las mujeres no está afiliada a ningún sistema de pensiones, frente al 53.3% de los hombres, es decir, una diferencia de 11.3 puntos porcentuales, notablemente mayor que la brecha de registro en SUNAT. Solo el 35.3% de las mujeres cotiza para su vejez, en contraste con el 46.7% de los hombres. Esta ampliación de la brecha entre un indicador de formalidad del centro de trabajo (Tabla 10) y uno de protección social individual (Tabla 11) sugiere que la desventaja femenina no es solo de inserción en empresas formales, sino que se agudiza en el acceso a derechos laborales individuales. Esto sería consistente con la hipótesis de que las discontinuidades en la trayectoria laboral femenina asociadas a la asunción de trabajo de cuidado no remunerado dificultan el acceso a empleos con condiciones contractuales que incluyan el paquete completo de beneficios, entre ellos la afiliación a pensiones. 
+
+```{r, fig.cap="Tabla 13: Tipo de contrato según sexo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla13_Contrato_Sexo.png"))
+```
+La **Tabla 13** muestra que la precarización contractual se refleja desproporcionadamente en la fuerza laboral femenina: el 65.1% de las mujeres trabaja sin contrato, frente al 59.1% de los hombres. La brecha se repite en el otro extremo de la escala de estabilidad: solo el 7% de las mujeres accede a un contrato indefinido, nombrado o permanente, en comparación con el 9.7% de los hombres. Las categorías intermedias siguen el mismo patrón desfavorable para las mujeres: plazo fijo (24% vs 27.3%) y locación de servicios (2.7% vs 3%). En conjunto, la tabla confirma que la desventaja femenina no se limita a la formalidad del centro de trabajo (Tabla 10) ni a la protección social (Tabla 11), sino que se traslada a la modalidad contractual misma, reforzando un patrón acumulativo de precariedad a lo largo de las distintas dimensiones de la relación laboral.
+---
+
+### Formalidad como Sistema: Coherencia entre Indicadores
+
+```{r, fig.cap="Tabla 14: Registro en SUNAT según afiliación a pensiones"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla13_RUC_Pension.png"))
+```
+La **Tabla 14** muestra que la formalidad no es un indicador aislado sino un paquete de condiciones que tienden a presentarse juntas. Entre quienes están afiliados a un sistema de pensiones, el 73.4% trabaja en un centro constituido como persona jurídica, y solo el 13.3% lo hace en uno sin registro en SUNAT. El patrón se invierte casi por completo entre quienes no están afiliados: apenas el 14.8% trabaja en una persona jurídica, mientras que el 66.7% lo hace en un centro sin ningún tipo de registro. Esta fuerte asociación confirma que la informalidad empresarial y la desprotección en pensiones no son fenómenos independientes, sino que se refuerzan mutuamente, consistente con la idea de que la formalidad opera como un sistema integrado de protecciones antes que como dimensiones sueltas.
+
+```{r, fig.cap="Tabla 15: Tipo de contrato según registro en SUNAT"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla14_Contrato_RUC.png"))
+```
+La **Tabla 15** refuerza esta lectura sistémica de la formalidad. Entre los centros constituidos como persona jurídica, el 18.9% de los trabajadores cuenta con contrato indefinido, y solo el 18.4% carece de contrato. El patrón se degrada drásticamente en persona natural, donde el 69.8% no tiene contrato y apenas el 5.2% accede a uno indefinido. La situación es más extrema aún entre los no registrados en SUNAT: el 97% trabaja sin contrato, prácticamente la totalidad de este grupo. Esta gradación —persona jurídica, persona natural, no registrado— muestra un deterioro progresivo y consistente en la calidad contractual a medida que disminuye el grado de formalidad empresarial, confirmando que la informalidad no opera como una categoría binaria sino como un continuo en el que cada nivel de desregistro se traduce en mayor precariedad laboral.
+---
+
+### Brechas de Ingreso y Tiempo de Trabajo según Sexo
+
+```{r, fig.cap="Tabla 16 y Gráfico 8: Ingreso principal según sexo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla15_Ingreso_Sexo.png"))
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico8_Ingreso_Sexo.png"))
+```
+La **Tabla 16** confirma y profundiza la brecha de ingresos detectada en los cruces anteriores. La media de ingreso principal de los hombres es de S/1,206, frente a S/960 de las mujeres, es decir, una diferencia de S/240, equivalente a una brecha del 19.9%. La mediana muestra un patrón similar: S/800 para hombres frente a S/650 para mujeres, lo que indica que la disparidad no es producto exclusivo de valores extremos en la cola alta, sino que persiste en el trabajador "típico" de cada grupo.
+
+La comparación entre media y mediana dentro de cada sexo también es relevante, en ambos casos la media supera claramente a la mediana: S/1,206 y S/800 en hombres; S/960 y S/650 en mujeres. Esto confirma una distribución del ingreso fuertemente asimétrica hacia la derecha, con una minoría de ingresos altos que arrastra el promedio muy por encima del valor central. El **Gráfico 8** visualiza justamente esta asimetría: en ambos grupos las cajas están comprimidas cerca de la base mientras se presentan numerosos valores atípicos ampliamente hacia arriba, confirmando que la mayoría de la PEA ocupada se concentra en ingresos bajos y medios, mientras un segmento minoritario accede a ingresos considerablemente más altos.
+
+La dispersión también difiere por sexo: la desviación estándar es mayor entre los hombres (S/1,388) que entre las mujeres (S/1,112), y el rango intercuartílico (Q3–Q1) es de S/354 para hombres frente a S/138 para mujeres. Esto se aprecia directamente en el gráfico: la caja azul (hombres) se ubica consistentemente por encima de la caja amarilla (mujeres) —tanto en su mediana como en el cuerpo completo que contiene el 50% central de la distribución—, y la nube de atípicos por encima de S/3,000 es visiblemente más densa y se extiende más lejos en el caso masculino. Esto es coherente con el máximo observado en cada grupo (S/28,080 en hombres frente a S/20,800 en mujeres).
+
+En conjunto, tabla y gráfico evidencian que la brecha de género en los ingresos opera tanto en el nivel central de la distribución como en su forma: los hombres no solo ganan más en promedio y en la mediana, sino que muestran mayor heterogeneidad y una probabilidad más alta de alcanzar ingresos extremadamente altos, segmento en el que están claramente sobrerrepresentados.
+
+```{r, fig.cap="Tabla 17 y Gráfico 9: Horas semanales según sexo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla16_Horas_Sexo.png"))
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico9_Horas_Sexo.png"))
+```
+La **Tabla 17 y el Gráfico 9** muestran una brecha de género en horas trabajadas que va en la misma dirección que la brecha de ingresos: los hombres trabajan en promedio 43.3 horas semanales, frente a 37.3 horas de las mujeres —una diferencia de casi 6 horas—. La mediana confirma el patrón: 48 horas para hombres frente a 40 para mujeres, una brecha de 8 horas semanales. Esta diferencia es visible de inmediato en el Gráfico 9: la caja azul (hombres) está desplazada hacia arriba respecto a la amarilla (mujeres), y el desplazamiento es particularmente marcado en el límite inferior de la caja (Q1): 35 horas en hombres frente a solo 24 horas en mujeres, lo que indica que el 25% de las mujeres con menor carga horaria trabaja considerablemente menos que su contraparte masculina.
+
+Este hallazgo es relevante para la interpretación de la brecha de ingresos de la Tabla 15: parte de la diferencia salarial entre hombres y mujeres podría explicarse, al menos parcialmente, por una menor cantidad de horas trabajadas por las mujeres, más que exclusivamente por una menor remuneración por hora. Esto sería consistente con la hipótesis de que el trabajo de cuidado no remunerado limita la disponibilidad horaria de las mujeres para el mercado laboral, empujándolas hacia jornadas parciales o reducidas.
+
+Un dato notable es que ambos grupos presentan una mediana muy similar en el extremo superior (Q3 = 51 en hombres, 48 en mujeres) y un máximo idéntico (98 horas), lo que sugiere que en el segmento de trabajadores con jornadas más extensas la brecha de género se reduce considerablemente. La dispersión (DE) es prácticamente igual entre sexos (17.9 en hombres, 17.7 en mujeres), lo que indica que la diferencia entre grupos está más en el nivel central de la distribución (mediana, Q1) que en su variabilidad interna. Cabe notar también la presencia de un grupo de valores atípicos en 0 horas entre los hombres (visible en la base del boxplot), que probablemente corresponde a población ocupada pero temporalmente ausente del trabajo durante la semana de referencia.
+---
+
+### Formalidad y Prima Salarial
+
+```{r, fig.cap="Tabla 18 y Gráfico 10: Ingreso según registro en SUNAT"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla17_Ingreso_RUC.png"))
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico10_Ingreso_RUC.png"))
+```
+La **Tabla 18** confirma con datos directos la hipótesis que se discutía previamente sobre la capacidad adquisitiva asociada al tipo de registro: existe una gradación clara y consistente del ingreso según la naturaleza jurídica del centro de trabajo. Los trabajadores en centros constituidos como persona jurídica tienen un ingreso mediano de S/1,455 y una media de S/1,829 —notablemente más altos que los de persona natural (mediana S/700, media S/931), y estos a su vez muy por encima de los no registrados (mediana S/350, media S/521)—.
+Esto responde directamente la pregunta que planteaste antes: sí, ser persona natural implica una menor capacidad adquisitiva en relación con la persona jurídica —la mediana de persona natural (S/700) es menos de la mitad que la de persona jurídica (S/1,455)—, aunque está considerablemente por encima de los centros sin registro (S/350), cuya mediana es la mitad de la de persona natural. Esto confirma que el continuo de formalidad detectado en la Tabla 14 (contrato) se replica también en el terreno del ingreso: cada nivel de formalización empresarial —jurídica, natural, no registrado— corresponde a un nivel de ingreso significativamente distinto, en un patrón descendente perfectamente ordenado.
+La brecha entre media y mediana en cada categoría también es reveladora: es más amplia en persona jurídica (S/1,829 vs S/1,455, diferencia de S/374) que en los no registrados (S/521 vs S/350, diferencia de S/171), lo que sugiere que la dispersión hacia ingresos altos —reflejada también en la mayor desviación estándar de persona jurídica (DE=1,633) frente a los no registrados (DE=487)— es un fenómeno concentrado sobre todo en el segmento más formal del mercado laboral, donde existe mayor heterogeneidad de puestos y remuneraciones.
+
+```{r, fig.cap="Tabla 19 y Gráfico 11: Ingreso según tipo de contrato"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla18_Ingreso_Contrato.png"))
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico11_Ingreso_Contrato.png"))
+```
+La **Tabla 19 y el Gráfico 11** muestran una jerarquía clara de ingresos según tipo de contrato: el contrato indefinido/nombrado/permanente concentra el ingreso más alto (mediana S/2,000, media S/2,599) y también la mayor dispersión (DE=2,404), seguido de locación de servicios (mediana S/1,500, media S/1,855) y plazo fijo (mediana S/1,500, media S/1,759). En el extremo opuesto, "sin contrato" registra la mediana más baja por amplio margen (S/360) y también la menor dispersión (DE=538), consistente con lo observado en el Gráfico 11, donde su caja aparece comprimida cerca de la base mientras concentra una enorme cantidad de valores atípicos hacia arriba —evidencia de que, aunque la mayoría de trabajadores sin contrato gana muy poco, existe una minoría con ingresos considerablemente más altos, probablemente por acumular muchas horas o combinar actividades—.
+
+Un hallazgo notable es que período de prueba y convenio de formación laboral juvenil, pese a ser modalidades contractuales "formales", muestran medianas relativamente bajas (S/1,131 y S/1,090) y tamaños muestrales pequeños (N=61 y N=83), lo que sugiere que corresponden a etapas iniciales o transitorias de la trayectoria laboral más que a puestos regulares o frecuentes. En conjunto, la tabla confirma que el tipo de contrato opera como una variable asociada a la posición salarial, con la categoría "Indefinido/nombrado/permanente" como categoría claramente premiada y la ausencia de contrato como la condición más afectada en la cantidad de ingresos percibidos.
+---
+
+### Capital Humano, Etnicidad e Ingreso
+
+```{r, fig.cap="Tabla 20: Ingreso según nivel educativo"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla19_Ingreso_Educacion.png"))
+```
+La **Tabla 20** muestra que el ingreso aumenta de forma clara y constante a medida que crece el nivel educativo: la mediana pasa de S/250 en "Sin nivel/Inicial/Básica especial" a S/320 en "Primaria", S/520 en "Secundaria", S/1,175 en "Superior no universitaria", S/1,560 en "Superior universitaria" y S/3,995 en "Posgrado", es decir un incremento de casi 16 veces entre el nivel más bajo y el más alto. El aumento no es progresivo en cada escalón, pues el incremento más grande ocurre entre el nivel "superior universitaria" y "posgrado" de S/1,560 a S/3,995, lo que sugiere que el retorno económico de estudiar es sustancial sobre todo en los niveles más altos de formación, más que crecer de manera proporcional en cada nivel.
+
+La dispersión también aumenta junto con el nivel educativo: la desviación estándar pasa de S/226 en el nivel más bajo a S/3,841 en posgrado, y la diferencia entre media y mediana se amplía en el mismo sentido (solo S/41 en "sin nivel", pero S/1014 en posgrado). Esto indica que a mayor nivel educativo no solo aumenta el ingreso esperado, sino también la variedad de trayectorias salariale. Asímismo, esto es consistente con un mercado laboral donde la educación superior y, en particular el posgrado, constituye un espacio al que accede solo un reducido grupo (N=297) pero con ingresos bastante más altos y desiguales entre sí que el resto de la PEA ocupada.
+
+```{r, fig.cap="Tabla 21: Ingreso según etnicidad"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Tabla20_Ingreso_Etnicidad.png"))
+```
+La **Tabla 21** evidencia una brecha étnico-racial clara en los ingresos entre los rgupos autoidentificados como "mestizo" (mediana S/1,000) y blanco (S/700), y encabezan la distribución, los grupos autoidentificados como indígenas y afrodescendientes se ubican sistemáticamente por debajo: Quechua (S/500), Negro/moreno/zambo/mulato/afroperuano (S/380), Aimara (S/600), Nativo/indígena amazónico (S/360) y otro pueblo indígena u originario (S/360). 
+
+La diferencia entre el grupo con mediana más alta (mestizo, S/1,000) y los grupos indígenas/afrodescendientes con mediana más baja (S/360) implica que estos últimos ganan menos de la mitad, evidenciando que la desigualdad étnico-racial en el mercado laboral peruano no es marginal sino estructural.
+Cabe destacar que el grupo quechua, pese a tener el mayor tamaño muestral entre los grupos no mestizos (N=5,742), también experimenta dicha desigualdad, pues su mediana (S/500) está muy por debajo del promedio general y su desviación estándar (DE=927) es también menor que la de mestizos (DE=1,403), lo que sugiere no solo ingresos más bajos sino trayectorias salariales más heterogéneas y con menor probabilidad de alcanzar los ingresos altos que existen, en mayor proporción, dentro del grupo mestizo.
+---
+
+### Trayectorias: Edad, Horas e Ingreso
+
+```{r, fig.cap="Gráfico 12: Relación entre edad e ingreso principal"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico12_Edad_Ingreso.png"))
+```
+El **Gráfico 12** muestra que la trayectoria salarial no sigue una acumulación ascendente constante a lo largo de la vida laboral. La línea de tendencia crece rápidamente durante la juventud, alcanza su punto más alto alrededor de los 30-35 años, y luego decrece de forma prolongadamente hasta los 50 años, para después profundizarse a partir de los 60 años en adelante hasta estabilizarse en un nivel bajo cerca de los 80-90.
+Este patrón es consistente con un mercado laboral que no premia la experiencia acumulada en las edades avanzadas, y que, ante la ausencia de un sistema de pensiones que cubra a una parte importante de la PEA (como mostraba la Tabla 11), empuja a muchas personas mayores a aceptar trabajos de menor ingreso para sostenerse económicamente en lugar de retirarse. La nube de puntos también muestra mayor dispersión en las edades intermedias (25-55 años), donde coexisten ingresos muy bajos y muy altos, mientras que en los extremos de la distribución de edad (muy jóvenes y muy mayores) los ingresos tienden a concentrarse en el rango bajo.
+
+```{r, fig.cap="Gráfico 13: Relación entre horas trabajadas e ingreso principal"}
+knitr::include_graphics(here::here("outputs", "outputs_exploracion_inicial", "Grafico13_Horas_Ingreso.png"))
+```
+El **Gráfico 13** muestra una relación entre horas trabajadas e ingreso que no es lineal ni uniformemente positiva. En el tramo de muy pocas horas (0-10 horas semanales) el ingreso mediano es relativamente alto, seguido de una caída hasta un mínimo alrededor de las 10-15 horas, para luego iniciar un ascenso gradual que se extiende hasta cerca de las 80-85 horas, donde la curva alcanza su punto más alto, y finalmente una leve caída en el extremo de mayor cantidad de horas (90-100).
+
+Este patrón sugiere que la relación horas-ingreso no es simplemente "a más horas, más pago proporcional": el pico inicial en horas muy bajas podría corresponder a actividades de alta remuneración por hora pero baja dedicación (por ejemplo, servicios profesionales o trabajos ocasionales bien pagados), mientras que el ascenso sostenido entre 25 y 85 horas sí sería más consistente con jornadas convencionales donde más horas se traduce en mayor ingreso total. La nube de puntos es notablemente densa y dispersa en casi todo el rango de horas, lo que indica una alta heterogeneidad: para una misma cantidad de horas trabajadas coexisten ingresos muy bajos y muy altos, reflejo probablemente de las brechas de formalidad y tipo de contrato discutidas en las tablas anteriores, más que de las horas trabajadas por sí solas.
+
+---
+
+## Conclusiones preliminares
+
+El análisis exploratorio, tanto univariado como bivariado, permite esbozar un primer diagnóstico sobre la relación entre autoidentificación étnico-racial, sexo y acceso a un trabajo decente en la PEA ocupada peruana (ENAHO 2025).
+
+La precariedad laboral se perfila como un rasgo característico de la muestra. Más de la mitad de la PEA ocupada trabaja "sin contrato" (61.6%), en centros no registrados en SUNAT (44.4%) o sin afiliación a pensiones (58.1%). La estabilidad laboral plena, es decir trabajar bajo un contrato indefinido, registro formal y protección social es minoritaria, lo que sitúa al trabajo decente (Gamero, 2012) como una condición excepcional más que generalizada. A esto se suma que la formalidad opera como un sistema integrado y no como dimensiones sueltas: registro en SUNAT, tipo de contrato, afiliación a pensiones e ingreso están fuertemente asociados entre sí, de modo que quien accede a una de estas protecciones tiende a acceder a las demás, mientras que quien queda excluido de una suele quedar excluido de todas.
+
+El análisis también evidencia una brecha de género sistemática y transversal. Las mujeres están sobrerrepresentadas en la informalidad, perciben ingresos medianos 15% menores que los hombres y trabajan menos horas semanales, lo que sugiere que la brecha salarial se explica parcialmente por menor disponibilidad horaria —posiblemente asociada al trabajo de cuidado no remunerado— y no únicamente por menor remuneración por hora. De manera paralela, existe una brecha étnico-racial estructural en el ingreso: los grupos autoidentificados como mestizo y blanco encabezan la distribución, mientras que los grupos indígenas (quechua, aimara, nativo/indígena amazónico) y afroperuano perciben medianas hasta 2.7 veces menores. Esta brecha no se explica por el tamaño del grupo, pues el quechua es el segundo más numeroso, sino que parece reflejar un patrón de desigualdad persistente.
+
+La educación y la formalidad contractual se perfilan como las variables con mayor peso sobre el ingreso. El ingreso mediano crece de forma pronunciada con el nivel educativo (de S/250 a S/3,995) y con la estabilidad contractual (de S/360 sin contrato a S/2,000 con contrato indefinido), lo que posiciona a ambas variables como los ejes más claros de estratificación dentro del mercado laboral. Asimismo, la trayectoria etaria y las horas trabajadas muestran patrones no lineales: el ingreso no crece de forma sostenida con la edad, sino que alcanza su punto máximo entre los 30-35 años y decae después de los 50-60, lo cual, sumado a la baja cobertura previsional, sugiere que la adultez mayor enfrenta una doble vulnerabilidad de menores ingresos y ausencia de red de protección social.
+
+En conjunto, estos hallazgos son consistentes con una lectura interseccional del trabajo decente, donde sexo, etnicidad, nivel educativo y edad no operarían como factores independientes sino que probablemente se combinan y refuerzan entre sí. Esta es una hipótesis que el análisis bivariado actual no puede confirmar directamente, pues requeriría cruces de tres o más variables o un modelo multivariado, pero que se perfila como la pregunta central para la siguiente etapa del proyecto.
