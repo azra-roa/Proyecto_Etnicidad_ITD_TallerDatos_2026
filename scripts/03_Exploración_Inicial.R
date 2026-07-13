@@ -686,3 +686,32 @@ tabla_ing_etnicidad <- enaho_diseno_500 %>%
 ft_ing_etnicidad <- formato_flextable(tabla_ing_etnicidad, "Tabla 20. Estadísticos descriptivos del ingreso principal según autoidentificación étnica, PEA ocupada, Perú, 2025")
 print(ft_ing_etnicidad)
 
+# ------------------------------------------------------------------------------
+# 5.3 Continua vs. Continua (Gráficos de Dispersión)
+# ------------------------------------------------------------------------------
+
+# A. Edad vs. Ingreso Principal
+plot_edad_ingreso <- ggplot(enaho_explorar %>% filter(!is.na(edad) & ing_prin > 0), 
+                            aes(x = edad, y = ing_prin)) +
+  geom_jitter(alpha = 0.15, color = "#4A7C59", width = 0.5, height = 0) +
+  geom_smooth(method = "gam", color = "red", se = FALSE, linewidth = 1) + 
+  scale_y_log10(labels = scales::comma) + 
+  labs(title = "Gráfico 12. Relación entre edad e ingreso principal, PEA ocupada", 
+       subtitle = "Escala logarítmica (eje Y) con línea de tendencia suavizada", 
+       x = "Edad (años)", y = "Ingreso (Soles, escala log10)",
+       caption = "Fuente: ENAHO 2025. Nota: Se excluyeron ingresos iguales a cero.") +
+  theme_minimal()
+print(plot_edad_ingreso)
+
+# B. Horas Semanales vs. Ingreso Principal
+plot_horas_ingreso <- ggplot(enaho_explorar %>% filter(!is.na(horas_sem) & ing_prin > 0), 
+                             aes(x = horas_sem, y = ing_prin)) +
+  geom_jitter(alpha = 0.15, color = "#8B5A2B", width = 0.5, height = 0) +
+  geom_smooth(method = "gam", color = "red", se = FALSE, linewidth = 1) + 
+  scale_y_log10(labels = scales::comma) + 
+  labs(title = "Gráfico 13. Relación entre horas trabajadas e ingreso principal, PEA ocupada", 
+       subtitle = "Escala logarítmica (eje Y) con línea de tendencia suavizada", 
+       x = "Horas trabajadas (semana)", y = "Ingreso (Soles, escala log10)",
+       caption = "Fuente: ENAHO 2025. Nota: Se excluyeron ingresos iguales a cero.") +
+  theme_minimal()
+print(plot_horas_ingreso)
