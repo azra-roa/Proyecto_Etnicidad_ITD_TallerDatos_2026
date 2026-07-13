@@ -98,4 +98,43 @@ enaho_explorar <- enaho_limpia %>%
 write_parquet(enaho_explorar, "datos/procesados/enaho_explorar_2025_12_06_26.parquet")
 
 
+# ------------------------------------------------------------------------------
+# 2. DISEÑO MUESTRAL------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# Diseño muestral - Módulo 200 (Miembros del hogar: sexo, edad)
+enaho_diseno_200 <- enaho_explorar %>%
+  filter(!is.na(factor200)) %>%
+  as_survey_design(
+    ids = conglome,
+    strata = estrato,
+    weights = factor200,
+    nest = TRUE
+  ) # factor200: variables demográficas básicas (sexo, edad)
+
+# Diseño muestral - Módulo 300 (Educación)
+enaho_diseno_300 <- enaho_explorar %>%
+  filter(!is.na(factor300)) %>%
+  as_survey_design(
+    ids = conglome,
+    strata = estrato,
+    weights = factor300,
+    nest = TRUE
+  ) # factor300: nivel educativo
+
+# Diseño muestral - Módulo 500 (Empleo e ingresos)
+enaho_diseno_500 <- enaho_explorar %>%
+  filter(!is.na(factor500)) %>%
+  as_survey_design(
+    ids = conglome,
+    strata = estrato,
+    weights = factor500,
+    nest = TRUE
+  ) # factor500: tiene_ruc, tiene_contrato, temp_pago, horas_sem, ing_prin, pension_no, etnicidad
+
+enaho_explorar %>%
+  summarise(
+    n_factor200 = sum(!is.na(factor200)),
+    n_factor300 = sum(!is.na(factor300)),
+    n_factor500 = sum(!is.na(factor500))
+  )
 
