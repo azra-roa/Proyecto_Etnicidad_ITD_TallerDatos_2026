@@ -194,3 +194,21 @@ tabla_etnicidad <- enaho_diseno_500 %>%
 
 ft_etnicidad <- formato_flextable(tabla_etnicidad, "Tabla 2. Distribución de la PEA ocupada según autoidentificación étnica, Perú, 2025")
 print(ft_etnicidad)
+
+# ------------------------------------------------------------------------------
+# 3.3 Educación-------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_educacion <- enaho_diseno_300 %>%
+  filter(!is.na(educacion_etiqueta)) %>%
+  group_by(educacion_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), 
+            Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje)) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), 
+         Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Nivel Educativo` = educacion_etiqueta, 
+         `Total (N)` = Poblacion, 
+         `%` = Porcentaje)
+
+ft_educacion <- formato_flextable(tabla_educacion, "Tabla 3. Distribución de la PEA ocupada según nivel educativo, Perú, 2025")
+print(ft_educacion)
