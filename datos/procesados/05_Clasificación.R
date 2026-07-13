@@ -197,7 +197,49 @@ write_parquet(
   here::here("datos", "procesados", "enaho_analitica_2025_12_07_26.parquet")
 )
 
+# ==============================================================================
+# 3. REPORTE DE VARIABLES CREADAS-----------------------------------------------
+# ==============================================================================
 
+# Construimos el reporte usando el objeto de diseño muestral
+reporte_clasificar <- enaho_reporte %>%
+  tbl_svysummary(
+    # Seleccionamos explícitamente solo las variables NUEVAS que hemos creado
+    include = c(
+      edad_teoria, edad_z, estrato_teo,
+      ingreso_mensual_imp, quintil_ingreso, tiene_pension,
+      tiene_registro, tiene_contratos, horas_decente,
+      ingreso_decente, indice_aditivo, ITD
+    ),
+    # Asignamos etiquetas limpias para el reporte
+    label = list(
+      edad_teoria ~ "Edad (Criterío Teórico",
+      edad_z ~ "Edad Estandarizada (Puntaje Z)",
+      estrato_teo ~ "Clasificación Geográfica (Teórica)",
+      ingreso_mensual_imp ~ "Ingreso Mensual (Imputado)",
+      quintil_ingreso ~ "Quintil de Ingreso (Criterio Datos)",
+      tiene_pension ~ "Afiliación a Sistema de Pensiones",
+      tiene_registro ~ "Registro en SUNAT",
+      tiene_contratos ~ "Condición de Contratación",
+      horas_decente ~ "Horas Trabajadas a la semana",
+      ingreso_decente ~ "Ingreso Mensual (En relacion a RMV)",
+      indice_aditivo ~ "Índice de Trabajo Decente simple (del 1-4)",
+      ITD ~ "Índice de Trabajo Decente (ITD)"
+    ),
+    # Configuramos qué estadísticos mostrar
+    statistic = list(
+      all_categorical() ~ "{n_unweighted} ({p}%)",
+      all_continuous() ~ "{mean} ({sd})"
+    ),
+    digits = all_continuous() ~ 2,
+    missing_text = "(Casos perdidos / NA)"
+  ) %>%
+  modify_header(label = "**Variable Construida / Recodificada**") %>%
+  modify_caption("**Reporte de Variables Analíticas de la Fase CLASIFICAR (ENAHO 2025)**") %>%
+  bold_labels()
+
+# Imprimir en el visor de RStudio
+reporte_clasificar
 
 
 
