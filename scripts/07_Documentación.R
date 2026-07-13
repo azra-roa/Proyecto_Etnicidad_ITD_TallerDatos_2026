@@ -64,3 +64,35 @@ var_label(enaho_codebook$quintil_ingreso) <- "Quintil de Ingresos (Fuente: ingre
 var_label(enaho_codebook$ingreso_decente) <- "Ingreso Mensual (En relacion a RMV) (Fuente: ingreso_mensual_imp"
 var_label(enaho_codebook$indice_aditivo) <- "Índice de Trabajo Decente simple (del 1-4)"
 var_label(enaho_codebook$ITD) <- "Índice de Trabajo Decente (ITD)"
+
+# ==============================================================================
+# 3. DOCUMENTACIÓN DE DECISIONES METODOLÓGICAS----------------------------------
+# ==============================================================================
+
+# Diccionario de decisiones metodológicas
+dict_metadata <- list(
+  etnicidad = "El valor 8 se recodificó a NA siguiendo el diccionario INEI. Los casos perdidos (MAR y MCAR) fueron excluidos (listwise). Se renombraron las etiquetas según un criterio teórico (Garavito, 2010)",
+  educacion = "Se eliminaron (listwise) los valores perdidos (MCAR). Se renombraron las etiquetas segun criterio propio",
+  tiene_pension = "Se considera que una persona esta afiliada a algún sistema de pensiones si respondió 0 a la pregunta P558A5, se considera que no esta afiliada si respondió 5 a dicha pregunta. Esto en linea con lo descrito por Gamero (2012)",
+  tiene_registro = "Se eliminaron los valores perdidos (listwise) de la variable fuente (P510A1). Se considera que el negocio tiene registro en SUNAT si respondió 1 o 2 en la pregunta P510A1, se considera que la persona no esta registrada si respondió 3 en dicha pregunta.  Esto en linea con lo descrito por Gamero (2012)",
+  tiene_contratos = "Se eliminaron los valores perdidos (liswise) de la variable fuente (P511A). Se considera que la persona tiene algun tipo de contrato si respondió 1, 2, 3, 4, 5, 6 u 8 a la pregunta P511A, se considera que no tiene contrato si respondió 7 a dicha pregunta.  Esto en linea con lo descrito por Gamero (2012)",
+  horas_decente = "La pregunta se extrajo imputada desde la base de datos de la INEI. Se volvieron a imputar los valores perdidos restantes por la media (agrupada por educacion). Sobre esa data se recodificó la variable para diferenciar a aquellos que trabajaran mas y menos de 48 horas semanales.  Esto en linea con lo descrito por Gamero (2012)",
+  edad_teoria = "Se agruparon en grupos de edad teóricos la variable de edad (P208A)",
+  edad_z = "Se estandarizó la edad de la muestra restando la media al valor y dividiendo el resultado por la desviación estándar.",
+  estrato_teo = "Se agruparon los estratos Geograficos en Urbano y Rural siguiendo criterios teoricos.",
+  ingreso_mensual_imp = "Se calculó el ingreso mensual multiplicando la variable de temporalidad de pago (P523) y la variable de ingreso ocupación principal (P524A1) la cual habia sido previamente imputado por la mediana (agrupada por educación).",
+  quintil_ingreso = "Se agruparon los grupos de ingresos en quintiles segun la data",
+  ingreso_decente = "Se recodifico la variable de ingreso_mensual_imp en función a si la persona ganaba un monto inferior o superior a la Remuniración Mínima Vital. Esto en linea con lo descrito por Gamero (2012)",
+  indice_aditivo = "Se creo un índice aditivo (del 1-4) sumando los valores de las variables dummy de tiene_pension, tiene_registro, horas_decente, tiene_contratos y ingreso decente. Las dimensiones de registro y contrato se consideraron de forma cruzada para una sola dummy. Esto en linea con lo descrito por Gamero (2012)",
+  ITD = "Se transformó el Indice de Trabajo Decente a una escala de 0 a 100"
+)
+
+# Aplicamos las descripciones iterativamente a las columnas correspondientes
+for (var in names(dict_metadata)) {
+  attr(enaho_codebook[[var]], "description") <- dict_metadata[[var]]
+}
+
+# Agregamos metadatos a nivel de ESTUDIO (Ficha Técnica)
+metadata(enaho_codebook)$name <- "Base de Datos Analítica - Proyecto Etnicidad-ITD ENAHO 2025"
+metadata(enaho_codebook)$description <- "Submuestra de la Encuesta Nacional de Hogares (2025) restringida a PEA Ocupada, mayores de 14 años, con autoidentificación étnica definida"
+metadata(enaho_codebook)$creator <- "Carmen Andonayre y Azra Roa"
