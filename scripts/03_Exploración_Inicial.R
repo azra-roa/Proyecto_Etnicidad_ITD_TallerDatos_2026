@@ -95,6 +95,7 @@ enaho_explorar <- enaho_limpia %>%
     
 )
 
-   
+write_parquet(enaho_explorar, "datos/procesados/enaho_explorar_2025_12_06_26.parquet")
+
 
 
