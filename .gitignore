@@ -49,7 +49,5 @@ po/*~
 rsconnect/
 
 #Formatos a ignorar
-datos/crudos/
-datos/procesados/
 *.dta
 *.sav
