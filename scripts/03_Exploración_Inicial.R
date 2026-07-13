@@ -21,3 +21,5 @@ library(officer)
 library(here)
 
 renv::snapshot()
+
+enaho_limpia <- read_parquet(here("datos", "procesados", "enaho_2025_12_07_26.parquet"))
