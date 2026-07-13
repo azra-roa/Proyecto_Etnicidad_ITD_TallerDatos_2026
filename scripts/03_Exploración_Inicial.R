@@ -212,3 +212,141 @@ tabla_educacion <- enaho_diseno_300 %>%
 
 ft_educacion <- formato_flextable(tabla_educacion, "Tabla 3. Distribución de la PEA ocupada según nivel educativo, Perú, 2025")
 print(ft_educacion)
+
+# ------------------------------------------------------------------------------
+# 3.4 Afiliación al Sistema de Pensiones-----------------------------------------
+# ------------------------------------------------------------------------------
+tabla_pension_no <- enaho_diseno_500 %>%
+  filter(!is.na(pension_no_etiqueta)) %>%
+  group_by(pension_no_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), 
+            Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje)) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), 
+         Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Afiliación a Sistema de Pensiones` = pension_no_etiqueta, 
+         `Total (N)` = Poblacion, 
+         `%` = Porcentaje)
+
+ft_pension_no <- formato_flextable(tabla_pension_no, "Tabla 4 . Distribución de la PEA ocupada según afiliación a sistema de pensiones, Perú, 2025")
+print(ft_pension_no)
+
+# ------------------------------------------------------------------------------
+# 3.5 Frecuencia de Pago-----------------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_temp_pago <- enaho_diseno_500 %>%
+  filter(!is.na(temp_pago_etiqueta)) %>%
+  group_by(temp_pago_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), 
+            Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje)) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), 
+         Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Frecuencia de Pago` = temp_pago_etiqueta, 
+         `Total (N)` = Poblacion, 
+         `%` = Porcentaje)
+
+ft_temp_pago <- formato_flextable(tabla_temp_pago, "Tabla 5. Distribución de la PEA ocupada según frecuencia de pago, Perú, 2025")
+print(ft_temp_pago)
+
+# ------------------------------------------------------------------------------
+# 3.6 Registro en SUNAT (RUC)-----------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_tiene_ruc <- enaho_diseno_500 %>%
+  filter(!is.na(tiene_ruc_etiqueta)) %>%
+  group_by(tiene_ruc_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), 
+            Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje)) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), 
+         Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Registro en SUNAT` = tiene_ruc_etiqueta, 
+         `Total (N)` = Poblacion, 
+         `%` = Porcentaje)
+
+ft_tiene_ruc <- formato_flextable(tabla_tiene_ruc, "Tabla 6. Distribución de la PEA ocupada según registro en SUNAT, Perú, 2025")
+print(ft_tiene_ruc)
+
+# ------------------------------------------------------------------------------
+# 3.7 Tipo de Contrato-------------------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_tiene_contrato <- enaho_diseno_500 %>%
+  filter(!is.na(tiene_contrato_etiqueta)) %>%
+  group_by(tiene_contrato_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), 
+            Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje)) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), 
+         Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Tipo de Contrato` = tiene_contrato_etiqueta, 
+         `Total (N)` = Poblacion, 
+         `%` = Porcentaje)
+
+ft_tiene_contrato <- formato_flextable(tabla_tiene_contrato, "Tabla 7. Distribución de la PEA ocupada según tipo de contrato, Perú, 2025")
+print(ft_tiene_contrato)
+
+# ------------------------------------------------------------------------------
+# 3.8 Estadísticos de resumen: Edad (Variable Continua)
+# ------------------------------------------------------------------------------
+stats_edad <- enaho_diseno_200 %>%
+  filter(!is.na(edad)) %>%
+  summarise(
+    `Mínimo` = min(edad, na.rm = TRUE),
+    `Percentil 25 (Q1)` = survey_quantile(edad, 0.25, vartype = NULL),
+    `Mediana (Q2)` = survey_median(edad, vartype = NULL),
+    `Media (Promedio)` = survey_mean(edad, vartype = NULL),
+    `Desviación Estándar` = survey_sd(edad, vartype = NULL),
+    `Percentil 75 (Q3)` = survey_quantile(edad, 0.75, vartype = NULL),
+    `Máximo` = max(edad, na.rm = TRUE)
+  ) %>%
+  pivot_longer(cols = everything(), names_to = "Estadístico", values_to = "Valor (Años)") %>%
+  mutate(
+    Estadístico = str_remove(Estadístico, "_q[0-9]+"),
+    `Valor (Años)` = scales::comma(round(`Valor (Años)`, 1))
+  )
+ft_edad <- formato_flextable(stats_edad, "Tabla 8. Edad de la PEA Ocupada (estadísticos de resumen), Perú, 2025")
+print(ft_edad)
+
+# ------------------------------------------------------------------------------
+# 3.9 Estadísticos de resumen: Ingreso Principal (Variable Continua)
+# ------------------------------------------------------------------------------
+stats_ing_prin <- enaho_diseno_500 %>%
+  filter(!is.na(ing_prin)) %>%
+  summarise(
+    `Mínimo` = min(ing_prin, na.rm = TRUE),
+    `Percentil 25 (Q1)` = survey_quantile(ing_prin, 0.25, vartype = NULL),
+    `Mediana (Q2)` = survey_median(ing_prin, vartype = NULL),
+    `Media (Promedio)` = survey_mean(ing_prin, vartype = NULL),
+    `Desviación Estándar` = survey_sd(ing_prin, vartype = NULL),
+    `Percentil 75 (Q3)` = survey_quantile(ing_prin, 0.75, vartype = NULL),
+    `Máximo` = max(ing_prin, na.rm = TRUE)
+  ) %>%
+  pivot_longer(cols = everything(), names_to = "Estadístico", values_to = "Valor (S/.)") %>%
+  mutate(
+    Estadístico = str_remove(Estadístico, "_q[0-9]+"),
+    `Valor (S/.)` = scales::comma(round(`Valor (S/.)`, 1))
+  )
+ft_ing_prin <- formato_flextable(stats_ing_prin, "Tabla 9. Ingreso Principal de la PEA Ocupada (estadísticos de resumen), Perú, 2025")
+print(ft_ing_prin)
+
+# ------------------------------------------------------------------------------
+# 3.10 Estadísticos de resumen: Horas Trabajadas Semanales (Variable Continua)
+# ------------------------------------------------------------------------------
+stats_horas_sem <- enaho_diseno_500 %>%
+  filter(!is.na(horas_sem)) %>%
+  summarise(
+    `Mínimo` = min(horas_sem, na.rm = TRUE),
+    `Percentil 25 (Q1)` = survey_quantile(horas_sem, 0.25, vartype = NULL),
+    `Mediana (Q2)` = survey_median(horas_sem, vartype = NULL),
+    `Media (Promedio)` = survey_mean(horas_sem, vartype = NULL),
+    `Desviación Estándar` = survey_sd(horas_sem, vartype = NULL),
+    `Percentil 75 (Q3)` = survey_quantile(horas_sem, 0.75, vartype = NULL),
+    `Máximo` = max(horas_sem, na.rm = TRUE)
+  ) %>%
+  pivot_longer(cols = everything(), names_to = "Estadístico", values_to = "Valor (Horas)") %>%
+  mutate(
+    Estadístico = str_remove(Estadístico, "_q[0-9]+"),
+    `Valor (Horas)` = scales::comma(round(`Valor (Horas)`, 1))
+  )
+ft_horas_sem <- formato_flextable(stats_horas_sem, "Tabla 10. Horas Trabajadas Semanalmente en la Ocupación Principal (estadísticos de resumen), Perú, 2025")
+print(ft_horas_sem)
