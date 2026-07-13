@@ -17,7 +17,133 @@ El análisis explora la relación entre la autoidentificación etnica y un Índi
 
 Este índice ha sido construido adaptando lo trabajado por Julio Gamero Requena (2012).
 
-Estructura (TBD)
+```text
+Proyecto_Etnicidad_ITD_TallerDatos_2026/
+├── datos
+│   └── procesados
+│       ├── enaho_2025_06_07_26.parquet
+│       ├── enaho_2025_12_07_26.parquet
+│       ├── enaho_2025.parquet
+│       ├── enaho_analitica_2025_12_07_26.parquet
+│       ├── enaho_explorar_2025_12_06_26.parquet
+│       └── enaho_final_2025_12_07_26.parquet
+├── docs
+│   ├── Diccionario_ENAHO_2025.pdf
+│   └── FichaTecnica_ENAHO_2025.pdf
+├── figure
+│   ├── cb_enaho_codebook_edad_distribution-52-1.pdf
+│   ├── cb_enaho_codebook_edad_teoria_distribution-117-1.pdf
+│   ├── cb_enaho_codebook_edad_z_distribution-130-1.pdf
+│   ├── cb_enaho_codebook_educacion_distribution-39-1.pdf
+│   ├── cb_enaho_codebook_estrato_teo_distribution-143-1.pdf
+│   ├── cb_enaho_codebook_etnicidad_distribution-26-1.pdf
+│   ├── cb_enaho_codebook_horas_decente_distribution-104-1.pdf
+│   ├── cb_enaho_codebook_indice_aditivo_distribution-195-1.pdf
+│   ├── cb_enaho_codebook_ingreso_decente_distribution-182-1.pdf
+│   ├── cb_enaho_codebook_ingreso_mensual_imp_distribution-156-1.pdf
+│   ├── cb_enaho_codebook_ITD_distribution-208-1.pdf
+│   ├── cb_enaho_codebook_quintil_ingreso_distribution-169-1.pdf
+│   ├── cb_enaho_codebook_sexo_distribution-1.pdf
+│   ├── cb_enaho_codebook_tiene_contratos_distribution-91-1.pdf
+│   ├── cb_enaho_codebook_tiene_pension_distribution-65-1.pdf
+│   └── cb_enaho_codebook_tiene_registro_distribution-78-1.pdf
+├── outputs
+│   ├── outputs_exploracion_analitica
+│   │   ├── Grafico1_EdadTeoria.png
+│   │   ├── Grafico10_TieneContratos.png
+│   │   ├── Grafico11_HorasDecente.png
+│   │   ├── Grafico12_IngresoDecente.png
+│   │   ├── Grafico13_IndiceAditivo.png
+│   │   ├── Grafico14_ITD.png
+│   │   ├── Grafico2_EdadZ.png
+│   │   ├── Grafico3_EstratoTeo.png
+│   │   ├── Grafico4_EducacionAgrupada.png
+│   │   ├── Grafico5_EtnicidadAgrupada.png
+│   │   ├── Grafico6_IngresoMensual.png
+│   │   ├── Grafico7_QuintilIngreso.png
+│   │   ├── Grafico8_TienePension.png
+│   │   ├── Grafico9_TieneRegistro.png
+│   │   ├── Tabla1_EdadTeoria.png
+│   │   ├── Tabla10_TieneContratos.png
+│   │   ├── Tabla11_HorasDecente.png
+│   │   ├── Tabla12_IngresoDecente.png
+│   │   ├── Tabla13_IndiceAditivo.png
+│   │   ├── Tabla14_ITD.png
+│   │   ├── Tabla2_EdadZ.png
+│   │   ├── Tabla3_EstratoTeo.png
+│   │   ├── Tabla4_EducacionAgrupada.png
+│   │   ├── Tabla5_EtnicidadAgrupada.png
+│   │   ├── Tabla6_IngresoMensual.png
+│   │   ├── Tabla7_QuintilIngreso.png
+│   │   ├── Tabla8_TienePension.png
+│   │   └── Tabla9_TieneRegistro.png
+│   ├── outputs_exploracion_inicial
+│   │   ├── Grafico1_Edad.png
+│   │   ├── Grafico10_Ingreso_RUC.png
+│   │   ├── Grafico11_Ingreso_Contrato.png
+│   │   ├── Grafico12_Edad_Ingreso.png
+│   │   ├── Grafico13_Horas_Ingreso.png
+│   │   ├── Grafico2_Ingreso.png
+│   │   ├── Grafico3_HorasSemana.png
+│   │   ├── Grafico4_FrecuenciaPago.png
+│   │   ├── Grafico8_Ingreso_Sexo.png
+│   │   ├── Grafico9_Horas_Sexo.png
+│   │   ├── Tabla1_Sexo.png
+│   │   ├── Tabla10_RUC_Sexo.png
+│   │   ├── Tabla10_Stats_HorasSemana.png
+│   │   ├── Tabla11_Pension_Sexo.png
+│   │   ├── Tabla11_RUC_Sexo.png
+│   │   ├── Tabla12_Contrato_Sexo.png
+│   │   ├── Tabla12_Pension_Sexo.png
+│   │   ├── Tabla13_Contrato_Sexo.png
+│   │   ├── Tabla13_RUC_Pension.png
+│   │   ├── Tabla14_Contrato_RUC.png
+│   │   ├── Tabla14_RUC_Pension.png
+│   │   ├── Tabla15_Contrato_RUC.png
+│   │   ├── Tabla15_Ingreso_Sexo.png
+│   │   ├── Tabla16_Horas_Sexo.png
+│   │   ├── Tabla16_Ingreso_Sexo.png
+│   │   ├── Tabla17_Horas_Sexo.png
+│   │   ├── Tabla17_Ingreso_RUC.png
+│   │   ├── Tabla18_Ingreso_Contrato.png
+│   │   ├── Tabla18_Ingreso_RUC.png
+│   │   ├── Tabla19_Ingreso_Contrato.png
+│   │   ├── Tabla19_Ingreso_Educacion.png
+│   │   ├── Tabla2_Etnicidad.png
+│   │   ├── Tabla20_Ingreso_Educacion.png
+│   │   ├── Tabla20_Ingreso_Etnicidad.png
+│   │   ├── Tabla21_Ingreso_Etnicidad.png
+│   │   ├── Tabla3_Educacion.png
+│   │   ├── Tabla4_Pension.png
+│   │   ├── Tabla5_FrecuenciaPago.png
+│   │   ├── Tabla6_RegistroSUNAT.png
+│   │   ├── Tabla7_TipoContrato.png
+│   │   ├── Tabla8_Stats_Edad.png
+│   │   └── Tabla9_Stats_Ingreso.png
+│   ├── CLASIFICAR_Reporte_VariablesCreadas.html
+│   ├── CodeBook.html
+│   ├── Grafico_NAs_Etnicidad_ITC_tratada.png
+│   ├── Grafico_NAs_Etnicidad_ITC.png
+│   ├── Reporte_Datos_Perdidos_ENAHO_tratada.csv
+│   └── Reporte_Datos_Perdidos_ENAHO.csv
+├── renv
+│   ├── .gitignore
+│   └── activate.R
+├── scripts
+│   ├── 01_Carga_Unión_Módulos.R
+│   ├── 02_Acondicionamiento.R
+│   ├── 03_Exploración_Inicial.R
+│   ├── 04_Informe_Exploración_Inicial.Rmd
+│   ├── 05_Clasificación.R
+│   ├── 06_EDA_Variables_Análiticas.R
+│   └── 07_Documentación.R
+├── .gitignore
+├── .Rprofile
+├── Creación de carpetas.R
+├── Proyecto_Etnicidad_ITD_TallerDatos_2026.Rproj
+├── README.md
+└── renv.lock
+```
  
 En la siguiente sección se especifican las principales acciones y decisones metodológicas tomadas para cada paso del proyecto. De tener dudas con respecto a alguna seccion, favor de consultar los scripts específicos
 
