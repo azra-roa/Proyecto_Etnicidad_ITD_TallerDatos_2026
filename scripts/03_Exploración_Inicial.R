@@ -176,3 +176,21 @@ tabla_sexo <- enaho_diseno_500 %>%
 
 ft_sexo <- formato_flextable(tabla_sexo, "Tabla 1. Distribución de la PEA ocupada según sexo, Perú, 2025")
 print(ft_sexo)
+
+# ------------------------------------------------------------------------------
+# 3.2 Etnicidad------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+tabla_etnicidad <- enaho_diseno_500 %>%
+  filter(!is.na(etnicidad_etiqueta)) %>%
+  group_by(etnicidad_etiqueta) %>%
+  summarise(Poblacion = survey_total(vartype = NULL), 
+            Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje)) %>%
+  mutate(Poblacion = scales::comma(round(Poblacion, 0)), 
+         Porcentaje = paste0(round(Porcentaje, 1), "%")) %>%
+  rename(`Etnicidad` = etnicidad_etiqueta, 
+         `Total (N)` = Poblacion, 
+         `%` = Porcentaje)
+
+ft_etnicidad <- formato_flextable(tabla_etnicidad, "Tabla 2. Distribución de la PEA ocupada según autoidentificación étnica, Perú, 2025")
+print(ft_etnicidad)
