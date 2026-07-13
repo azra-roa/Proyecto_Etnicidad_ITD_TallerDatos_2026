@@ -241,5 +241,8 @@ reporte_clasificar <- enaho_reporte %>%
 # Imprimir en el visor de RStudio
 reporte_clasificar
 
-
+# Exportar el reporte a Word (usando flextable para mantener el formato)
+reporte_clasificar %>%
+  as_flex_table() %>%
+  flextable::save_as_html(path = here::here("outputs", "CLASIFICAR_Reporte_VariablesCreadas.html"))
 
