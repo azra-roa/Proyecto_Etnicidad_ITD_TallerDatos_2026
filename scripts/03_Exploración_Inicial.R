@@ -88,6 +88,13 @@ enaho_explorar <- enaho_limpia %>%
                                  levels = c(0, 5),
                                  labels = c("Afiliado",
                                             "No está afiliado")),
+  # C. Limpieza Numérica Estricta - verificación de tipo (ya son numeric, se confirma por seguridad)
+    factor200 = as.numeric(factor200),
+    factor300 = as.numeric(factor300),
+    factor500 = as.numeric(factor500)
+    
+)
+
    
 
 
