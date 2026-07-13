@@ -350,3 +350,66 @@ stats_horas_sem <- enaho_diseno_500 %>%
   )
 ft_horas_sem <- formato_flextable(stats_horas_sem, "Tabla 10. Horas Trabajadas Semanalmente en la Ocupación Principal (estadísticos de resumen), Perú, 2025")
 print(ft_horas_sem)
+
+# ==============================================================================
+# 4. EXPLORACIÓN UNIVARIADA: GRÁFICOS
+# ==============================================================================
+# 4.1 Histograma: Edad (Ponderado)
+plot_edad <- ggplot(enaho_explorar %>% filter(!is.na(edad) & !is.na(factor200)), 
+                    aes(x = edad, weight = factor200)) +
+  geom_histogram(fill = "#4A7C59", color = "white", binwidth = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 1. Distribución de edad de la PEA ocupada", 
+       x = "Edad (años)", 
+       y = "Frecuencia Poblacional", 
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional") + 
+  theme_minimal()
+print(plot_edad)
+
+# 4.2 Histograma: Ingreso Principal (Ponderado)
+plot_ingreso <- ggplot(enaho_explorar %>% filter(!is.na(ing_prin) & !is.na(factor500)), 
+                       aes(x = ing_prin, weight = factor500)) +
+  geom_histogram(fill = "#2E5B88", color = "white", bins = 50) +
+  coord_cartesian(xlim = c(0, 10000)) + 
+  scale_x_continuous(labels = scales::comma) + 
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 2. Distribución del ingreso principal", 
+       x = "Ingreso (Soles)", 
+       y = "Frecuencia Poblacional", 
+       caption = "Fuente: ENAHO 2025. Nota: Eje X truncado en S/10,000. Cálculos ajustados a nivel poblacional") + 
+  theme_minimal()
+print(plot_ingreso)
+
+# 4.3 Histograma: Horas Trabajadas Semanalmente (Ponderado)
+plot_horas <- ggplot(enaho_explorar %>% filter(!is.na(horas_sem) & !is.na(factor500)), 
+                     aes(x = horas_sem, weight = factor500)) +
+  geom_histogram(fill = "#8B5A2B", color = "white", binwidth = 5) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 3. Distribución de horas trabajadas a la semana", 
+       x = "Horas trabajadas (semana)", 
+       y = "Frecuencia Poblacional", 
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional") + 
+  theme_minimal()
+print(plot_horas)
+
+
+# 4.4 Gráfico de Barras: Frecuencia de Pago (Ponderado)
+prop_temp_pago <- enaho_diseno_500 %>%
+  filter(!is.na(temp_pago_etiqueta)) %>%
+  group_by(temp_pago_etiqueta) %>%
+  summarise(Porcentaje = survey_mean(vartype = NULL) * 100) %>%
+  arrange(desc(Porcentaje))
+
+plot_temp_pago <- ggplot(prop_temp_pago, 
+                         aes(x = reorder(temp_pago_etiqueta, -Porcentaje), y = Porcentaje)) +
+  geom_col(fill = "#E69F00", alpha = 0.85) +
+  geom_text(aes(label = paste0(round(Porcentaje, 1), "%")), 
+            vjust = -0.5, fontface = "bold", size = 3.5) +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Gráfico 4. Distribución de la PEA ocupada según frecuencia de pago", 
+       x = "Frecuencia de Pago", 
+       y = "Porcentaje (%)", 
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional") + 
+  theme_minimal()
+print(plot_temp_pago)
+
