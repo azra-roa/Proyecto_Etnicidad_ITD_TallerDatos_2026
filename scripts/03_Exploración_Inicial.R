@@ -1,9 +1,9 @@
-# ====================================================================================
+# ==============================================================================
 #Proyecto: Análisis de la relacion etnicidad-ITD usando datos de la ENAHO 
 #Autorxs: Carmen Andonayre y Azra Roa
 #Objetivo de este script: Explorar la base de datos acondicionada
 #Fecha: 12-07-2026
-# =====================================================================================
+# ==============================================================================
 
 rm(list = ls())
 
@@ -160,7 +160,7 @@ formato_flextable <- function(tabla, titulo) {
 }
 
 # ------------------------------------------------------------------------------
-# 3.1 Sexo------------------------------------------------------------------------
+# 3.1 Sexo----------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 tabla_sexo <- enaho_diseno_500 %>%
   filter(!is.na(sexo_etiqueta)) %>%
@@ -438,7 +438,7 @@ tabla_sexo_ruc <- enaho_diseno_500 %>%
   pivot_wider(names_from = tiene_ruc_etiqueta, values_from = Celda) %>%
   rename(`Sexo` = sexo_etiqueta)
 
-ft_sexo_ruc <- formato_flextable(tabla_sexo_ruc, "Tabla 10. Sexo según registro en SUNAT de la PEA ocupada, Perú, 2025")
+ft_sexo_ruc <- formato_flextable(tabla_sexo_ruc, "Tabla 11. Sexo según registro en SUNAT de la PEA ocupada, Perú, 2025")
 print(ft_sexo_ruc)
 
 # B. Sexo según Afiliación a Pensiones (Porcentajes por fila)
@@ -455,7 +455,7 @@ tabla_sexo_pension <- enaho_diseno_500 %>%
   pivot_wider(names_from = pension_no_etiqueta, values_from = Celda) %>%
   rename(`Sexo` = sexo_etiqueta)
 
-ft_sexo_pension <- formato_flextable(tabla_sexo_pension, "Tabla 11. Sexo según afiliación a sistema de pensiones de la PEA ocupada, Perú, 2025")
+ft_sexo_pension <- formato_flextable(tabla_sexo_pension, "Tabla 12. Sexo según afiliación a sistema de pensiones de la PEA ocupada, Perú, 2025")
 print(ft_sexo_pension)
 
 # C. Sexo según Tipo de Contrato (Porcentajes por fila)
@@ -472,7 +472,7 @@ tabla_sexo_contrato <- enaho_diseno_500 %>%
   pivot_wider(names_from = tiene_contrato_etiqueta, values_from = Celda) %>%
   rename(`Sexo` = sexo_etiqueta)
 
-ft_sexo_contrato <- formato_flextable(tabla_sexo_contrato, "Tabla 12. Tipo de contrato laboral según sexo de la PEA ocupada, Perú, 2025")
+ft_sexo_contrato <- formato_flextable(tabla_sexo_contrato, "Tabla 13. Tipo de contrato laboral según sexo de la PEA ocupada, Perú, 2025")
 print(ft_sexo_contrato)
 
 # D. Registro en SUNAT según Afiliación a Pensiones (Porcentajes por fila)
@@ -489,7 +489,7 @@ tabla_ruc_pension <- enaho_diseno_500 %>%
   pivot_wider(names_from = tiene_ruc_etiqueta, values_from = Celda) %>%
   rename(`Afiliación a Pensiones` = pension_no_etiqueta)
 
-ft_ruc_pension <- formato_flextable(tabla_ruc_pension, "Tabla 13. Registro en SUNAT según afiliación a sistema de pensiones, PEA ocupada, Perú, 2025")
+ft_ruc_pension <- formato_flextable(tabla_ruc_pension, "Tabla 14. Registro en SUNAT según afiliación a sistema de pensiones, PEA ocupada, Perú, 2025")
 print(ft_ruc_pension)
 
 # E. Registro en SUNAT según Tipo de Contrato (Porcentajes por fila)
@@ -506,7 +506,7 @@ tabla_ruc_contrato <- enaho_diseno_500 %>%
   pivot_wider(names_from = tiene_contrato_etiqueta, values_from = Celda) %>%
   rename(`Registro en SUNAT` = tiene_ruc_etiqueta)
 
-ft_ruc_contrato <- formato_flextable(tabla_ruc_contrato, "Tabla 14. Tipo de contrato laboral según registro en SUNAT, PEA ocupada, Perú, 2025")
+ft_ruc_contrato <- formato_flextable(tabla_ruc_contrato, "Tabla 15. Tipo de contrato laboral según registro en SUNAT, PEA ocupada, Perú, 2025")
 print(ft_ruc_contrato)
 
 # ------------------------------------------------------------------------------
@@ -531,7 +531,7 @@ tabla_ing_sexo <- enaho_diseno_500 %>%
                 ~ scales::comma(round(.x, 0)))) %>%
   rename(`Sexo` = sexo_etiqueta)
 
-ft_ing_sexo <- formato_flextable(tabla_ing_sexo, "Tabla 15. Estadísticos descriptivos del ingreso principal según sexo, PEA ocupada, Perú, 2025")
+ft_ing_sexo <- formato_flextable(tabla_ing_sexo, "Tabla 16. Estadísticos descriptivos del ingreso principal según sexo, PEA ocupada, Perú, 2025")
 print(ft_ing_sexo)
 
 plot_ing_sexo <- ggplot(enaho_explorar %>% filter(!is.na(sexo_etiqueta) & !is.na(ing_prin)), 
@@ -564,7 +564,7 @@ tabla_horas_sexo <- enaho_diseno_500 %>%
                 ~ round(.x, 1))) %>%
   rename(`Sexo` = sexo_etiqueta)
 
-ft_horas_sexo <- formato_flextable(tabla_horas_sexo, "Tabla 16. Estadísticos descriptivos de horas trabajadas según sexo, PEA ocupada, Perú, 2025")
+ft_horas_sexo <- formato_flextable(tabla_horas_sexo, "Tabla 17. Estadísticos descriptivos de horas trabajadas según sexo, PEA ocupada, Perú, 2025")
 print(ft_horas_sexo)
 
 plot_horas_sexo <- ggplot(enaho_explorar %>% filter(!is.na(sexo_etiqueta) & !is.na(horas_sem)), 
@@ -592,7 +592,7 @@ tabla_ing_ruc <- enaho_diseno_500 %>%
                 ~ scales::comma(round(.x, 0)))) %>%
   rename(`Registro en SUNAT` = tiene_ruc_etiqueta)
 
-ft_ing_ruc <- formato_flextable(tabla_ing_ruc, "Tabla 17. Estadísticos descriptivos del ingreso principal según registro en SUNAT, PEA ocupada, Perú, 2025")
+ft_ing_ruc <- formato_flextable(tabla_ing_ruc, "Tabla 18. Estadísticos descriptivos del ingreso principal según registro en SUNAT, PEA ocupada, Perú, 2025")
 print(ft_ing_ruc)
 
 plot_ing_ruc <- ggplot(enaho_explorar %>% filter(!is.na(tiene_ruc_etiqueta) & !is.na(ing_prin)), 
@@ -621,7 +621,7 @@ tabla_ing_contrato <- enaho_diseno_500 %>%
                 ~ scales::comma(round(.x, 0)))) %>%
   rename(`Tipo de Contrato` = tiene_contrato_etiqueta)
 
-ft_ing_contrato <- formato_flextable(tabla_ing_contrato, "Tabla 18. Estadísticos descriptivos del ingreso principal según tipo de contrato, PEA ocupada, Perú, 2025")
+ft_ing_contrato <- formato_flextable(tabla_ing_contrato, "Tabla 19. Estadísticos descriptivos del ingreso principal según tipo de contrato, PEA ocupada, Perú, 2025")
 print(ft_ing_contrato)
 
 plot_ing_contrato <- ggplot(enaho_explorar %>% filter(!is.na(tiene_contrato_etiqueta) & !is.na(ing_prin)), 
@@ -665,7 +665,7 @@ tabla_ing_educacion <- enaho_diseno_300 %>%
                 ~ scales::comma(round(.x, 0)))) %>%
   rename(`Nivel Educativo` = educacion_agrupada)
 
-ft_ing_educacion <- formato_flextable(tabla_ing_educacion, "Tabla 19. Estadísticos descriptivos del ingreso principal según nivel educativo (agrupado), PEA ocupada, Perú, 2025")
+ft_ing_educacion <- formato_flextable(tabla_ing_educacion, "Tabla 20. Estadísticos descriptivos del ingreso principal según nivel educativo (agrupado), PEA ocupada, Perú, 2025")
 print(ft_ing_educacion)
 
 # F. Ingreso Principal según Etnicidad (solo tabla, 9 categorías)
@@ -683,7 +683,7 @@ tabla_ing_etnicidad <- enaho_diseno_500 %>%
                 ~ scales::comma(round(.x, 0)))) %>%
   rename(`Etnicidad` = etnicidad_etiqueta)
 
-ft_ing_etnicidad <- formato_flextable(tabla_ing_etnicidad, "Tabla 20. Estadísticos descriptivos del ingreso principal según autoidentificación étnica, PEA ocupada, Perú, 2025")
+ft_ing_etnicidad <- formato_flextable(tabla_ing_etnicidad, "Tabla 21. Estadísticos descriptivos del ingreso principal según autoidentificación étnica, PEA ocupada, Perú, 2025")
 print(ft_ing_etnicidad)
 
 # ------------------------------------------------------------------------------
@@ -748,19 +748,19 @@ ggsave(paste0(ruta_salida, "/Grafico4_FrecuenciaPago.png"), plot = plot_temp_pag
 # EXPORTACIÓN: TABLAS Y GRÁFICOS BIVARIADOS (numeración según .Rmd)
 # ==============================================================================
 # --- 5.1 Categórica vs. Categórica ---
-save_as_image(ft_sexo_ruc,       path = paste0(ruta_salida, "/Tabla10_RUC_Sexo.png"))
-save_as_image(ft_sexo_pension,   path = paste0(ruta_salida, "/Tabla11_Pension_Sexo.png"))
-save_as_image(ft_sexo_contrato,  path = paste0(ruta_salida, "/Tabla12_Contrato_Sexo.png"))
-save_as_image(ft_ruc_pension,    path = paste0(ruta_salida, "/Tabla13_RUC_Pension.png"))
-save_as_image(ft_ruc_contrato,   path = paste0(ruta_salida, "/Tabla14_Contrato_RUC.png"))
+save_as_image(ft_sexo_ruc,       path = paste0(ruta_salida, "/Tabla11_RUC_Sexo.png"))
+save_as_image(ft_sexo_pension,   path = paste0(ruta_salida, "/Tabla12_Pension_Sexo.png"))
+save_as_image(ft_sexo_contrato,  path = paste0(ruta_salida, "/Tabla13_Contrato_Sexo.png"))
+save_as_image(ft_ruc_pension,    path = paste0(ruta_salida, "/Tabla14_RUC_Pension.png"))
+save_as_image(ft_ruc_contrato,   path = paste0(ruta_salida, "/Tabla15_Contrato_RUC.png"))
 
 # --- 5.2 Categórica vs. Continua ---
-save_as_image(ft_ing_sexo,       path = paste0(ruta_salida, "/Tabla15_Ingreso_Sexo.png"))
-save_as_image(ft_horas_sexo,     path = paste0(ruta_salida, "/Tabla16_Horas_Sexo.png"))
-save_as_image(ft_ing_ruc,        path = paste0(ruta_salida, "/Tabla17_Ingreso_RUC.png"))
-save_as_image(ft_ing_contrato,   path = paste0(ruta_salida, "/Tabla18_Ingreso_Contrato.png"))
-save_as_image(ft_ing_educacion,  path = paste0(ruta_salida, "/Tabla19_Ingreso_Educacion.png"))
-save_as_image(ft_ing_etnicidad,  path = paste0(ruta_salida, "/Tabla20_Ingreso_Etnicidad.png"))
+save_as_image(ft_ing_sexo,       path = paste0(ruta_salida, "/Tabla16_Ingreso_Sexo.png"))
+save_as_image(ft_horas_sexo,     path = paste0(ruta_salida, "/Tabla17_Horas_Sexo.png"))
+save_as_image(ft_ing_ruc,        path = paste0(ruta_salida, "/Tabla18_Ingreso_RUC.png"))
+save_as_image(ft_ing_contrato,   path = paste0(ruta_salida, "/Tabla19_Ingreso_Contrato.png"))
+save_as_image(ft_ing_educacion,  path = paste0(ruta_salida, "/Tabla20_Ingreso_Educacion.png"))
+save_as_image(ft_ing_etnicidad,  path = paste0(ruta_salida, "/Tabla21_Ingreso_Etnicidad.png"))
 
 ggsave(paste0(ruta_salida, "/Grafico8_Ingreso_Sexo.png"),      plot = plot_ing_sexo,      width = 8, height = 5, bg = "white")
 ggsave(paste0(ruta_salida, "/Grafico9_Horas_Sexo.png"),        plot = plot_horas_sexo,    width = 8, height = 5, bg = "white")
